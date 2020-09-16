@@ -51,12 +51,16 @@ void testVector()
 	d = c + b + a;									// sum, init, sum, init, assign	-> d = (9, 12, 15)
 #endif	// __cplusplus
 }
-
-
+/*
 int main(int const argc, char const* const argv[])
 {
-	testVector();
+    testVector();
 
-	printf("\n\n");
-	system("pause");
+    printf("\n\n");
+    system("pause");
 }
+*/
+
+
+
+

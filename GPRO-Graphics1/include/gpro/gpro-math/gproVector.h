@@ -103,3 +103,5 @@ floatv vec3sum(float3 v_sum, float3 const v_lh, float3 const v_rh);	// get sum o
 
 
 #endif	// !_GPRO_VECTOR_H_
+
+
