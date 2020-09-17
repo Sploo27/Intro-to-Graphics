@@ -40,12 +40,20 @@ vec4 myEffect0(in vec2 fragCoord)
     color.r = 0.5; //color x = 0.5
 }
 
-//
-float tileSize = 50.0f; // controls the amount of pixels per block
-float tileNumber = 10.0f;
-float modNum = 2.0f;
-vec4 color = vec4(1.0, 1.0, 1.0, 1.0); 	//Default color
-//
+
+
+float makeCheckerboard(vec2 fragCoord)
+{
+    float tileSize = 40.0f; // controls the amount of pixels per block
+	float tileNumber = 10.0f;
+	float modNum = 2.0f;
+	vec4 color = vec4(1.0, 1.0, 1.0, 1.0); 	//Default color
+    
+    vec2 uv = fragCoord/iResolution.xy;
+	vec2 tile = floor(fragCoord / tileSize);		// Controls the size of the tile
+    float pat = mod(tile.x + tile.y, modNum);		// Controls the actual pattern displayed
+    return pat;
+}
 
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
@@ -55,12 +63,11 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     
     //fragColor = myEffect0(fragCoord);
     
-    //
-    vec2 uv = fragCoord/iResolution.xy;
-	vec2 tile = floor(fragCoord / tileSize);		// Controls the size of the tile
-    float pat = mod(tile.x + tile.y, modNum);		// Controls the actual pattern displayed
+    
+    
     					
-    fragColor = pat * myEffect0(fragCoord);         // Final pass for the draw call
+    fragColor = makeCheckerboard(fragCoord) * myEffect0(fragCoord);  //creates a checkerboard over
+    																 //the gradient
     
     //
     /*
