@@ -20,10 +20,13 @@ Using influence from:
 -"Ray Tracing in One Weekend" by Peter Shirley
 https://raytracing.github.io/books/RayTracingInOneWeekend.html#overview
 
+- "The OpenGL® Shading Language, Version 4.60.7" by John Kessenich, Google (Editor and Author) ; Dave Baldwin and Randi Rost
+https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
 
 - https://www.shadertoy.com/view/XsGfWw (circle)
 
 - https://www.shadertoy.com/view/4tKcRc (checkerboard)
+
 
 */
 
