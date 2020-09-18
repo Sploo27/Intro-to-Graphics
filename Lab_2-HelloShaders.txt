@@ -1,63 +1,91 @@
+/*
+Author: Mitko Ivanov
+Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
+Assignment: Lab 2
+Date Assigned: 09/11/2020
+Due Date: 09/18/2020
+Description: Use Shadertoy to create an interesting shader using 
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the
+definition and consequences of plagiarism and acknowledge that the assessor
+of this assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of
+academic staff; and/or
+- Communicate a copy of this assignment to a plagiarism checking
+service (which may then retain a copy of this assignment on its
+database for the purpose of future plagiarism checking)
 
-// using color = vec3;
-#define colorRGB    vec3;
-#define colorRGBA   vec4;
+Using influence from:
+-"Ray Tracing in One Weekend" by Peter Shirley
+https://raytracing.github.io/books/RayTracingInOneWeekend.html#overview
 
-vec4 myEffect0(in vec2 fragCoord)
+
+- https://www.shadertoy.com/view/XsGfWw (circle)
+
+- https://www.shadertoy.com/view/4tKcRc (checkerboard)
+
+*/
+
+vec4 myEffect0(in vec2 fragCoord)// controls the color of the background
 {
+    vec3 color = sin(iTime + vec3(1.0, 3.0, 5.0));// slowly changes the color of the background
     
-    
-    vec2 uv = fragCoord / iResolution.xy;
-    
-    //vec3 color = vec3(uv, 0.0);
-    vec3 color = 0.5 + 0.5*sin(iTime+uv.yxy+vec3(2,4,6));
-	
-    float alpha = 1.0;
-    
-    //return vec4(1.0, 0.5, 0.0, 1.0);	
-    return vec4(color, alpha);
+    return vec4(color, 1.0);
     
 }
 
-float circle(float radius, vec2 center, vec2 uv) {
-	float d = distance(center, uv);
-    return 1.0 - step(radius, d);
+vec4 myEffect1(in vec2 fragCoord)// controls the color of the circle
+{
+    vec3 color = -sin(iTime + vec3(1.0, 3.0, 5.0));// changes the color of the ball, but opposite to the background
+	
+    return vec4(color, 1.0);
+    
 }
+
+
 
 float makeCheckerboard(vec2 fragCoord)
 {
-    float tileSize = 10.0; // controls the amount of pixels per block
-	float tileNumber = 10.0;
-	float modNum = 1.5;
+    float tileSize = 5.0; // controls the amount of pixels per tile
 	
+	float modNum = 50.0; //<-- controls the wave look
+
+	vec2 tile = floor(fragCoord / tileSize);		// controls tile size
+    float pattern = mod(tile.x + tile.y, modNum);		// controls the displayed pattern
     
-    vec2 uv = fragCoord/iResolution.xy;
-	vec2 tile = floor(fragCoord / tileSize);		// Controls the size of the tile
-    float pattern = mod(tile.x + tile.y, modNum);		// Controls the actual pattern displayed
-    return pattern;
-}
+    return sin(iTime * pattern) + 1.0;  //changes the color of the checkerboard
+    
+} //reference: https://www.shadertoy.com/view/4tKcRc
+
+float circle(float radius, vec2 center, vec2 uv) { //creates the circle using given variables
+	float d = length(center - uv);
+    return 1.0 - step(radius, d); 
+    
+} //reference: https://www.shadertoy.com/view/XsGfWw
 
 
-vec4 movement(vec2 fragCoord)
+vec4 circleMovement(vec2 fragCoord)
 {
-    vec2 uv = (fragCoord - 0.5 * iResolution.xy)/iResolution.y;
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy)/iResolution.y; //makes the circle a circle, and on the screen
     
-	float radius = 0.1;
-    float speed = 2.0;
-    
-    
-    vec2 center = vec2(sin(iTime * speed) / 2.0, cos(iTime * speed) / 4.0);  //ellipse that the circle moves around
-    float c = circle(radius * (sin(iTime) + 1.0), center, uv);
+	float radius = 0.1; //radius of the circle
+    float speed = 4.0; //speed the circle moves
     
     
-    vec3 col = vec3(c);
+    vec2 center = vec2(-sin(iTime * speed) / 2.0, cos(iTime * speed) / 5.0);  //ellipse that the circle moves around
+    float c = circle(radius * (cos(iTime) + 1.0), center, uv); //makes the radius grow and shrink using iTime
+    
+    
+    vec3 col = vec3(c); //turns the circle data into a vec3
     return vec4(col, 1.0);
-}
+    
+} //reference: https://www.shadertoy.com/view/XsGfWw
 
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-    //fragColor = makeCheckerboard(fragCoord) * myEffect0(fragCoord);  //creates a checkerboard over
     
-    fragColor = makeCheckerboard(fragCoord) * myEffect0(fragCoord) + (movement(fragCoord) * myEffect0(fragCoord*2.0));
-}
+    fragColor = (makeCheckerboard(fragCoord) * myEffect0(fragCoord)) + (circleMovement(fragCoord) * myEffect1(fragCoord));
+}//puts the checkerboard and the myEffect0 together, and then puts the moving circle with myEffect1 on top
+
