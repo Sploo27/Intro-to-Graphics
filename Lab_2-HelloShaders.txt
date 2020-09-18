@@ -19,36 +19,45 @@ vec4 myEffect0(in vec2 fragCoord)
     
 }
 
-
+float circle(float radius, vec2 center, vec2 uv) {
+	float d = distance(center, uv);
+    return 1.0 - step(radius, d);
+}
 
 float makeCheckerboard(vec2 fragCoord)
 {
-    float tileSize = 10.0f; // controls the amount of pixels per block
-	float tileNumber = 10.0f;
-	float modNum = 1.5f;
-	vec4 color = vec4(1.0, 1.0, 1.0, 1.0); 	//Default color
+    float tileSize = 10.0; // controls the amount of pixels per block
+	float tileNumber = 10.0;
+	float modNum = 1.5;
+	
     
     vec2 uv = fragCoord/iResolution.xy;
 	vec2 tile = floor(fragCoord / tileSize);		// Controls the size of the tile
-    float pat = mod(tile.x + tile.y, modNum);		// Controls the actual pattern displayed
-    return pat;
+    float pattern = mod(tile.x + tile.y, modNum);		// Controls the actual pattern displayed
+    return pattern;
+}
+
+
+vec4 movement(vec2 fragCoord)
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy)/iResolution.y;
+    
+	float radius = 0.1;
+    float speed = 2.0;
+    
+    
+    vec2 center = vec2(sin(iTime * speed) / 2.0, cos(iTime * speed) / 4.0);  //ellipse that the circle moves around
+    float c = circle(radius * (sin(iTime) + 1.0), center, uv);
+    
+    
+    vec3 col = vec3(c);
+    return vec4(col, 1.0);
 }
 
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-    fragColor = makeCheckerboard(fragCoord) * myEffect0(fragCoord);  //creates a checkerboard over
-    																 //the gradient
+    //fragColor = makeCheckerboard(fragCoord) * myEffect0(fragCoord);  //creates a checkerboard over
     
-    
-    /*
-    //Normalized pixel coordinates (from 0 to 1)
-    uv = fragCoord/iResolution.xy;
-
-    // Time varying pixel color
-    vec3 col = 0.5 + 0.5*cos(iTime+uv.xyx+vec3(0,2,4));
-
-    // Output to screen
-    fragColor = pat * vec4(col,1.0);
-	*/
+    fragColor = makeCheckerboard(fragCoord) * myEffect0(fragCoord) + (movement(fragCoord) * myEffect0(fragCoord*2.0));
 }
