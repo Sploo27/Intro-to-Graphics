@@ -61,6 +61,13 @@ void calcRay(out vec4 rayDirection, out vec4 rayOrigin,
     rayDirection = asOffset(viewport - eyePosition);
 }
 
+struct pointLight
+{
+    vec4 center;
+    vec4 color;
+    float intensity; //how far the light will reach
+};
+
 struct sSphere
 {
     vec4 center;
