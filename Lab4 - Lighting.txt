@@ -105,7 +105,7 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
     
     pointLight light;
     
-    initPointLight(light, vec3(1.0, 1.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0), 10.0); 
+    initPointLight(light, vec3(3.0, 3.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0), 10.0); 
     
     //TEST
     vec3 dp;
@@ -149,12 +149,19 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
         float specularCoef = max(0.0, dot(viewVector, reflectedLightVector));
         
         //highlight exponent
-        float highlightExponent = 264.0;
+        float highlightExponent = 64.0;
+        //float specularFocus = pow(specularCoef, highlightExponent);
+        
+        //blinn-phong reflectance
+        vec3 halfwayVector = normalize(lightVector * inversesqrt(lightVector * lightVector) + viewVector);
+        specularCoef = max(0.0, dot(halfwayVector, reflectedLightVector));
+        
         float specularFocus = pow(specularCoef, highlightExponent);
         
         //return diffuseColor * diffuseIntensity;
         //return specularColor * specularCoef;
-        return specularColor * specularFocus;
+        //return specularColor * specularFocus;
+        return (specularColor * specularFocus) + (diffuseColor * diffuseIntensity);
     }
 	
 	// BACKGROUND
