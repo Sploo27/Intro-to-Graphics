@@ -148,8 +148,13 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
         vec3 reflectedLightVector = reflect(-normalize(lightVector), normal);
         float specularCoef = max(0.0, dot(viewVector, reflectedLightVector));
         
+        //highlight exponent
+        float highlightExponent = 264.0;
+        float specularFocus = pow(specularCoef, highlightExponent);
+        
         //return diffuseColor * diffuseIntensity;
-        return specularColor * specularCoef;
+        //return specularColor * specularCoef;
+        return specularColor * specularFocus;
     }
 	
 	// BACKGROUND
