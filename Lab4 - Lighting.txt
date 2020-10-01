@@ -67,6 +67,14 @@ struct pointLight
     vec4 color;
     float intensity; //how far the light will reach
 };
+    
+
+void initPointLight(out pointLight pLight, in vec3 center, in vec4 color, in float intensity)
+{
+    pLight.center = asPoint(center);
+    pLight.color = color;
+    pLight.intensity = intensity;
+}
 
 struct sSphere
 {
@@ -91,13 +99,13 @@ float lenSq(vec2 x)
 //    rayOrigin:    input ray origin
 vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
 {
-    // DUMMY RESULT: OUTPUT RAY DIRECTION AS-IS
-    //  -> what does the ray look like as color?
-    //return rayDirection;
-    
     //SCENE
     sSphere sphere;
     initSphere(sphere, vec3(0.0, 0.0, -4.0), 0.5);
+    
+    pointLight light;
+    
+    initPointLight(light, vec3(2.0, 2.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0), 10.0); 
     
     //TEST
     vec3 dp;
@@ -121,7 +129,19 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
             //normalize(position - sphere.center.xyz);
             (position - sphere.center.xyz) / sphere.radius;
         
-        return vec4(normal * 0.5 + 0.5, 1.0);
+        //return vec4(normal * 0.5 + 0.5, 1.0);
+        
+        //point lighting
+        vec4 diffuseColor = vec4(normal * 0.5 + 0.5, 1.0);
+        
+        //diffuse intensity
+        vec3 lightVector = light.center.xyz - position;
+        
+        float diffusionCoef = max(0.0, (dot(normal, lightVector * inversesqrt(lightVector * lightVector))));
+        float attenuation = 1.0/(1.0 + length(lightVector)/light.intensity + (length(lightVector) * length(lightVector)) / (light.intensity * light.intensity));
+        float diffuseIntensity = diffusionCoef * attenuation;
+        
+        return vec4(normal * 0.5 + 0.5, 1.0) * diffuseIntensity;
     }
 	
 	// BACKGROUND
