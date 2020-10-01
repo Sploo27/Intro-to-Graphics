@@ -105,7 +105,7 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
     
     pointLight light;
     
-    initPointLight(light, vec3(2.0, 2.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0), 10.0); 
+    initPointLight(light, vec3(1.0, 1.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0), 10.0); 
     
     //TEST
     vec3 dp;
@@ -133,15 +133,23 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
         
         //point lighting
         vec4 diffuseColor = vec4(normal * 0.5 + 0.5, 1.0);
+        vec4 specularColor = vec4(1.0, 1.0, 1.0, 1.0);
         
         //diffuse intensity
         vec3 lightVector = light.center.xyz - position;
         
+        //lambertian reflectance
         float diffusionCoef = max(0.0, (dot(normal, lightVector * inversesqrt(lightVector * lightVector))));
         float attenuation = 1.0/(1.0 + length(lightVector)/light.intensity + (length(lightVector) * length(lightVector)) / (light.intensity * light.intensity));
         float diffuseIntensity = diffusionCoef * attenuation;
         
-        return vec4(normal * 0.5 + 0.5, 1.0) * diffuseIntensity;
+        //phong reflectance
+        vec3 viewVector = normalize(rayOrigin.xyz - position);
+        vec3 reflectedLightVector = reflect(-normalize(lightVector), normal);
+        float specularCoef = max(0.0, dot(viewVector, reflectedLightVector));
+        
+        //return diffuseColor * diffuseIntensity;
+        return specularColor * specularCoef;
     }
 	
 	// BACKGROUND
