@@ -1,7 +1,7 @@
 /*
 Author: Mitko Ivanov
 Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
-Assignment: Lab 3: Fragment Shaders & Parallelization
+Assignment: Lab 4: Lighting
 Date Assigned: 09/25/2020
 Due Date: 10/02/2020
 Description: Use Shadertoy to follow allong given algorithms to learn about lighting in GLSL
@@ -21,7 +21,7 @@ Using influence from:
 - "The OpenGL® Shading Language, Version 4.60.7" by John Kessenich, Google (Editor and Author) ; Dave Baldwin and Randi Rost
 https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
 
-- Given code from the Lab 3: Lighting assignment page in canvas
+- Given code from the Lab 4: Lighting assignment page in canvas
 
 
 */
@@ -230,8 +230,8 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
 	
 	// BACKGROUND
 	const vec3 warm = vec3(0.8, 0.4, 0.2), cool = vec3(0.2, 0.4, 0.8);
-	//return vec4(mix(warm, cool, rayDirection.y), 1.0);
-    return vec4(0.5);
+	return vec4(mix(warm, cool, rayDirection.y), 1.0);
+    //return vec4(0.5);
 }//Given code from the Lab 3: Lighting assignment page in canvas
 
 // mainImage: process the current pixel (exactly one call per pixel)
