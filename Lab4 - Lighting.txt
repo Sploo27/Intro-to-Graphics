@@ -1,3 +1,32 @@
+/*
+Author: Mitko Ivanov
+Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
+Assignment: Lab 3: Fragment Shaders & Parallelization
+Date Assigned: 09/25/2020
+Due Date: 10/02/2020
+Description: Use Shadertoy to follow allong given algorithms to learn about lighting in GLSL
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the
+definition and consequences of plagiarism and acknowledge that the assessor
+of this assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of
+academic staff; and/or
+- Communicate a copy of this assignment to a plagiarism checking
+service (which may then retain a copy of this assignment on its
+database for the purpose of future plagiarism checking)
+
+Using influence from:
+
+- "The OpenGL® Shading Language, Version 4.60.7" by John Kessenich, Google (Editor and Author) ; Dave Baldwin and Randi Rost
+https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
+
+- Given code from the Lab 3: Lighting assignment page in canvas
+
+
+*/
+
+
 // GLSL STARTER CODE BY DANIEL S. BUCKSTEIN
 
 // asPoint: promote a 3D vector into a 4D vector representing a point (w=1)
@@ -5,14 +34,14 @@
 vec4 asPoint(in vec3 point)
 {
     return vec4(point, 1.0);
-}
+}//Given code from the Lab 3: Lighting assignment page in canvas
 
 // asOffset: promote a 3D vector into a 4D vector representing an offset (w=0)
 //    offset: input 3D vector
 vec4 asOffset(in vec3 offset)
 {
     return vec4(offset, 0.0);
-}
+}//Given code from the Lab 3: Lighting assignment page in canvas
 
 // calcViewport: calculate the viewing plane (viewport) coordinate
 //    viewport:       output viewing plane coordinate
@@ -42,7 +71,7 @@ void calcViewport(out vec3 viewport, out vec2 ndc, out vec2 uv,
 
     // viewport: x = [-aspect*h/2, +aspect*h/2), y = [-h/2, +h/2), z = -f
     viewport = vec3(ndc * vec2(aspect, 1.0) * (viewportHeight * 0.5), -focalLength);
-}
+}//Given code from the Lab 3: Lighting assignment page in canvas
 
 // calcRay: calculate the ray direction and origin for the current pixel
 //    rayDirection: output direction of ray from origin
@@ -59,7 +88,7 @@ void calcRay(out vec4 rayDirection, out vec4 rayOrigin,
     // ray direction relative to origin is based on viewing plane coordinate
     // w = 0 because it represents a direction; can ignore when using
     rayDirection = asOffset(viewport - eyePosition);
-}
+}//Given code from the Lab 3: Lighting assignment page in canvas
 
 struct pointLight
 {
@@ -203,7 +232,7 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
 	const vec3 warm = vec3(0.8, 0.4, 0.2), cool = vec3(0.2, 0.4, 0.8);
 	//return vec4(mix(warm, cool, rayDirection.y), 1.0);
     return vec4(0.5);
-}
+}//Given code from the Lab 3: Lighting assignment page in canvas
 
 // mainImage: process the current pixel (exactly one call per pixel)
 //    fragColor: output final color for current pixel
@@ -228,4 +257,4 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     calcRay(rayDirection, rayOrigin, vec3(0.0), viewport);
     
     fragColor += calcColor(rayDirection, rayOrigin);
-}
+}//Given code from the Lab 3: Lighting assignment page in canvas
