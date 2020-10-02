@@ -103,9 +103,12 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
     sSphere sphere;
     initSphere(sphere, vec3(0.0, 0.0, -4.0), 0.5);
     
-    pointLight light;
+    pointLight light1, light2, light3;
     
-    initPointLight(light, vec3(3.0, 3.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0), 10.0); 
+    initPointLight(light1, vec3(3.0, -3.0, 0), vec4(1.0, 1.0, 1.0, 1.0), 10.0); 
+    initPointLight(light2, vec3(3.0, 3.0, sin(iTime * 10.0)), vec4(1.0, 1.0, 1.0, 1.0), 10.0);
+    							//little animation on this one
+    initPointLight(light3, vec3(-10.0, -5.0, 0), vec4(1.0, 1.0, 1.0, 1.0), 10.0);
     
     //TEST
     vec3 dp;
@@ -132,36 +135,43 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
         //return vec4(normal * 0.5 + 0.5, 1.0);
         
         //point lighting
-        vec4 diffuseColor = vec4(normal * 0.5 + 0.5, 1.0);
-        vec4 specularColor = vec4(1.0, 1.0, 1.0, 1.0);
+        vec4 diffuseColor = vec4(normal * 0.5 + 0.5, 1.0);//color for light1 (lambertian reflectance)
+        vec4 specularColor = vec4(1.0, 1.0, 1.0, 1.0);//color for light2 (blinn-phong reflectance)
+        vec4 specularColor2 = vec4(0.0, 1.0, 1.0, 0.0);//color for light3 (phong reflectance)
         
         //diffuse intensity
-        vec3 lightVector = light.center.xyz - position;
+        vec3 lightVector1 = light1.center.xyz - position;
+        vec3 lightVector2 = light2.center.xyz - position;
+        vec3 lightVector3 = light3.center.xyz - position;
         
         //lambertian reflectance
-        float diffusionCoef = max(0.0, (dot(normal, lightVector * inversesqrt(lightVector * lightVector))));
-        float attenuation = 1.0/(1.0 + length(lightVector)/light.intensity + (length(lightVector) * length(lightVector)) / (light.intensity * light.intensity));
+        float diffusionCoef = max(0.0, (dot(normal, lightVector1 * inversesqrt(lightVector1 * lightVector1))));
+        float attenuation = 1.0/(1.0 + length(lightVector1)/light1.intensity + (length(lightVector1) * length(lightVector1)) / (light1.intensity * light1.intensity));
         float diffuseIntensity = diffusionCoef * attenuation;
         
         //phong reflectance
         vec3 viewVector = normalize(rayOrigin.xyz - position);
-        vec3 reflectedLightVector = reflect(-normalize(lightVector), normal);
+        vec3 reflectedLightVector = reflect(-normalize(lightVector2), normal);
         float specularCoef = max(0.0, dot(viewVector, reflectedLightVector));
+        
+        vec3 reflectedLight3Vector = reflect(-normalize(lightVector3), normal);
+        float specularCoef2 = max(0.0, dot(viewVector, reflectedLight3Vector));
         
         //highlight exponent
         float highlightExponent = 64.0;
+        float highlightExponent2 = 8.0;
         //float specularFocus = pow(specularCoef, highlightExponent);
         
         //blinn-phong reflectance
-        vec3 halfwayVector = normalize(lightVector * inversesqrt(lightVector * lightVector) + viewVector);
+        vec3 halfwayVector = normalize(lightVector2 * inversesqrt(lightVector2 * lightVector2) + viewVector);
         specularCoef = max(0.0, dot(halfwayVector, reflectedLightVector));
         
         float specularFocus = pow(specularCoef, highlightExponent);
-        
+        float specularFocus2 = pow(specularCoef2, highlightExponent2);
         //return diffuseColor * diffuseIntensity;
         //return specularColor * specularCoef;
         //return specularColor * specularFocus;
-        return (specularColor * specularFocus) + (diffuseColor * diffuseIntensity);
+        return (specularColor * specularFocus) + (diffuseColor * diffuseIntensity) + (specularColor2 * specularFocus2);
     }
 	
 	// BACKGROUND
