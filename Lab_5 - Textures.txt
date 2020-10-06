@@ -193,10 +193,27 @@ color4 calcColor(in sViewport vp, in sRay ray)
     sCoord loc = px / res;
     
     sScalar ratio = res.y * vp.resolutionInv.y;
-    loc = loc * ratio; //zooming out
+    loc = loc * ratio + 0.1 * iTime; //zooming out
     
-    return texture(iChannel0, loc); //full rgba
+    //return texture(iChannel0, loc); //full rgba
     //return texture(iChannel0, loc).rrrr; //greyscale(swizzling)
+    
+    // testing for lighting
+    //return vp.viewportPoint;'
+    //return vec4(0.0, 0.0, 1.0, 1.0);
+    //return vec4(normalize(vec3(vp.viewportPoint.xy, 1.0)), 0.0);
+    
+    
+    
+    //cube map
+    //sampler type: samplerCube
+    vec3 cubeLoc = ray.direction.xyz;
+    
+    //rotation matrix
+    //cubeLoc = rotMat * cubeLoc
+    
+    return texture(iChannel1, cubeLoc);
+    
 }
 
 
