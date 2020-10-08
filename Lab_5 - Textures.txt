@@ -62,6 +62,15 @@ sScalar lengthSq(sVector x)
     return dot(x, x);
 }
 
+//cross-fade function
+vec4 crossFade(vec4 image1, vec4 image2)
+{
+    float fade = (sin(iTime) * 0.5) + 0.5;
+    return mix(image1, image2, fade);
+}
+
+
+
 
 //------------------------------------------------------------
 // VIEWPORT INFO
@@ -195,7 +204,13 @@ color4 calcColor(in sViewport vp, in sRay ray)
     sScalar ratio = res.y * vp.resolutionInv.y;
     loc = loc * ratio + 0.1 * iTime; //zooming out
     
-    //return texture(iChannel0, loc); //full rgba
+    
+    vec4 crossFadeImage = crossFade(texture(iChannel2, loc), texture(iChannel0, loc));
+    
+    
+    return crossFadeImage; 
+    
+    //return texture(iChannel2, loc); //full rgba
     //return texture(iChannel0, loc).rrrr; //greyscale(swizzling)
     
     // testing for lighting
@@ -203,16 +218,11 @@ color4 calcColor(in sViewport vp, in sRay ray)
     //return vec4(0.0, 0.0, 1.0, 1.0);
     //return vec4(normalize(vec3(vp.viewportPoint.xy, 1.0)), 0.0);
     
-    
-    
     //cube map
     //sampler type: samplerCube
-    vec3 cubeLoc = ray.direction.xyz;
+    //vec3 cubeLoc = ray.direction.xyz;
     
-    //rotation matrix
-    //cubeLoc = rotMat * cubeLoc
-    
-    return texture(iChannel1, cubeLoc);
+    //return texture(iChannel1, cubeLoc);
     
 }
 
