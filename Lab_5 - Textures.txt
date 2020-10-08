@@ -1,3 +1,35 @@
+/*
+Author: Mitko Ivanov
+Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
+Assignment: Lab 4: Textures
+Date Assigned: 09/25/2020
+Due Date: 10/02/2020
+Description: Use Shadertoy to follow allong given algorithms to learn about textures in GLSL
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the
+definition and consequences of plagiarism and acknowledge that the assessor
+of this assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of
+academic staff; and/or
+- Communicate a copy of this assignment to a plagiarism checking
+service (which may then retain a copy of this assignment on its
+database for the purpose of future plagiarism checking)
+
+Using influence from:
+
+- "The OpenGL® Shading Language, Version 4.60.7" by John Kessenich, Google (Editor and Author) ; Dave Baldwin and Randi Rost
+https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
+
+-https://www.shadertoy.com/view/MdKGzG (cube-map camera)
+
+-https://www.shadertoy.com/view/MtfczX (barrel distortion)
+
+- Given code from the Lab 4: Lighting assignment page in canvas
+
+
+*/
+
 // GLSL STARTER CODE BY DANIEL S. BUCKSTEIN
 
 //------------------------------------------------------------
@@ -96,7 +128,7 @@ vec2 barrelDistortion(vec2 uv)
     uv.y = radius * sin(theta);
     
     return uv;
-}
+} //reference: https://www.shadertoy.com/view/MtfczX
 
 struct pointLight
 {
@@ -270,14 +302,23 @@ color4 calcColor(in sViewport vp, in sRay ray)
     float attenuation = 1.0/(1.0 + length(lightVector)/light.intensity + (lengthSq(length(lightVector)) ) / (lengthSq(light.intensity)));
     float diffuseIntensity = diffusionCoef * attenuation;
     
-    return crossFadeImage * diffuseIntensity;
+    //return crossFadeImage * diffuseIntensity;
     
     //cube map
     //sampler type: samplerCube
-    //vec3 cubeLoc = ray.direction.xyz;
     
-    //return texture(iChannel1, cubeLoc);
+    vp.uv = 2.0 * vp.pixelCoord/iResolution.xy - 1.0;
+    vp.uv = barrelDistortion(vp.uv);
+    vp.uv.x *= (iResolution.x / iResolution.y);
+    vec3 cam = normalize(vec3(vp.uv.x, vp.uv.y, 1.0));
     
+    float time = 0.2 * iTime;
+    
+    cam.xz += vec2(sin(time), cos(time));
+    //reference: https://www.shadertoy.com/view/MdKGzG
+    
+    
+    return texture(iChannel1, cam);
     
     //return texture(iChannel0, loc); //full rgba
     //return texture(iChannel0, loc).rrrr; //greyscale(swizzling)
