@@ -1,7 +1,7 @@
 /*
 Author: Mitko Ivanov
 Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
-Assignment: Lab 4: Textures
+Assignment: Lab 5: Textures
 Date Assigned: 09/25/2020
 Due Date: 10/02/2020
 Description: Use Shadertoy to follow allong given algorithms to learn about textures in GLSL
