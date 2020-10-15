@@ -1,4 +1,101 @@
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+//BLOOM BUFFER
+
+// GLSL STARTER CODE BY DANIEL S. BUCKSTEIN
+//  -> BUFFER A TAB (scene)
+
+//------------------------------------------------------------
+// RENDERING FUNCTIONS
+
+
+//
+const float weights[] = float[](0.0024499299678342,
+									0.0043538453346397,
+									0.0073599963704157,
+									0.0118349786570722,
+									0.0181026699707781,
+                                    0.0263392293891488,
+                                    0.0364543006660986,
+                                    0.0479932050577658,
+                                    0.0601029809166942,
+                                    0.0715974486241365,
+                                    0.0811305381519717,
+                                    0.0874493212267511,
+                                    0.0896631113333857,
+                                    0.0874493212267511,
+                                    0.0811305381519717,
+                                    0.0715974486241365,
+                                    0.0601029809166942,
+                                    0.0479932050577658,
+                                    0.0364543006660986,
+                                    0.0263392293891488,
+                                    0.0181026699707781,
+                                    0.0118349786570722,
+                                    0.0073599963704157,
+                                    0.0043538453346397,
+                                    0.0024499299678342);
+
+
+
+
+color4 blurEffect(in sCoord fragCoord, in sCoord uv)
 {
-    fragColor = vec4(0.0,0.0,1.0,1.0);
+    
+    vec4 color;
+    
+    color4 c = color4(0.0);
+    ivec2 p = ivec2(fragCoord.xy) - ivec2(0, weights.length() >> 1);
+    
+    int i;
+    for (i = 0; i < weights.length(); i++)
+    {
+        ivec2 temp = p + ivec2(0.0, i);
+    	c = c + (texelFetch(iChannel0, temp, 0) * weights[i]);
+    }
+    
+    color = c;
+    
+    return color;
+}
+
+    
+
+// calcColor: calculate the color of current pixel
+//	  vp:  input viewport info
+//	  ray: input ray info
+color4 calcColor(in sViewport vp, in sRay ray, in sCoord fragCoord)
+{
+    sCoord uv = fragCoord / iChannelResolution[0].xy;
+
+    
+    return blurEffect(fragCoord, uv);
+    
+}
+
+
+//------------------------------------------------------------
+// SHADERTOY MAIN
+
+// mainImage: process the current pixel (exactly one call per pixel)
+//    fragColor: output final color for current pixel
+//    fragCoord: input location of current pixel in image (in pixels)
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
+{
+    // viewing plane (viewport) inputs
+    const sBasis eyePosition = sBasis(0.0);
+    const sScalar viewportHeight = 2.0, focalLength = 1.5;
+    
+    // viewport info
+    sViewport vp;
+
+    // ray
+    sRay ray;
+    
+    // render
+    initViewport(vp, viewportHeight, focalLength, fragCoord, iResolution.xy);
+    initRayPersp(ray, eyePosition, vp.viewportPoint.xyz);
+    
+    
+    fragColor = calcColor(vp, ray, fragCoord);
+   
+    
 }
