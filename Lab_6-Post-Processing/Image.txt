@@ -15,11 +15,36 @@ void mainImage(out color4 fragColor, in sCoord fragCoord)
     
     // TESTING
     // set iChannel0 to 'Misc/Buffer A' and fetch sample
-    fragColor = texture(iChannel0, uv);
     
-    //buffer b
-    fragColor = texture(iChannel1, uv);
+    vec4 tex1 = texture(iChannel0, uv);
+    vec4 tex2 = texture(iChannel1, uv);
+    vec4 tex3 = texture(iChannel2, uv);
     
-    //buffer c 
-    fragColor = texture(iChannel2, uv);
+    
+    //buffer a / rotating cube map
+    //fragColor = tex1;
+    
+    //buffer b / bright pass
+    //fragColor = tex2;
+    
+    //buffer c / blur
+    //fragColor = tex3;
+    
+    
+    
+    //mix composition
+    //fragColor = mix(tex1, tex2, tex3);
+    
+    //addition composition
+    //fragColor = tex1 + tex2 + tex3;
+    
+    //screen composition
+    //fragColor = 1.0 - (1.0 - tex1) * (1.0 - tex2) * (1.0 - tex3);
+    
+    //cool invert color
+    fragColor = (1.0 - tex1) * (1.0 - tex2) * (1.0 - tex3);
+    
+    //Color Burn mode
+    //fragColor = (1.0 - (1.0 - tex2)/tex1)/tex3;
+    
 }
