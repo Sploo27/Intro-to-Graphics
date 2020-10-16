@@ -75,7 +75,7 @@ const float weights[] = float[](0.0024499299678342,
 
 
 
-color4 blurEffect(in sCoord fragCoord, in sCoord uv)
+color4 blurEffect(in sCoord fragCoord)
 {
     
     vec4 color;
@@ -106,7 +106,7 @@ color4 calcColor(in sViewport vp, in sRay ray, in sCoord fragCoord)
     sCoord uv = fragCoord / iChannelResolution[0].xy;
 
     
-    return blurEffect(fragCoord, uv);
+    return blurEffect(fragCoord);
     
 }
 
