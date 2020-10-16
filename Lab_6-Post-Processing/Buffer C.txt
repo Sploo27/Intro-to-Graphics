@@ -1,3 +1,41 @@
+/*
+Author: Mitko Ivanov
+Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
+Assignment: Lab 6: Post-Processing
+Date Assigned: 10/09/2020
+Due Date: 10/16/2020
+Description: Use Shadertoy to follow allong given algorithms to learn about post-processing in GLSL
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the
+definition and consequences of plagiarism and acknowledge that the assessor
+of this assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of
+academic staff; and/or
+- Communicate a copy of this assignment to a plagiarism checking
+service (which may then retain a copy of this assignment on its
+database for the purpose of future plagiarism checking)
+
+Using influence from:
+
+- "The OpenGL® Shading Language, Version 4.60.7" by John Kessenich, Google (Editor and Author) ; Dave Baldwin and Randi Rost
+https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
+
+- "OpenGL SuperBible ("Blue Book"), 7ed (2015)" by Graham Sellers, Richard S. Wright Jr., Nicholas Haemel 
+https://f.usemind.org/files/b/1/UseMind.ORG_comprehensive-tutorial-and-reference_2015__.pdf
+
+-"GLSL 4.0 Cookbook (2011)" by David Wolff
+https://people.inf.elte.hu/plisaai/pdf/David%20Wolff%20-%20OpenGL%204.0%20Shading%20Language%20Cookbook%20(2).pdf
+
+-https://www.shadertoy.com/view/MdKGzG (cube-map camera)
+
+-https://www.shadertoy.com/view/tsByWV (sound tutorial)
+
+- Given code from the Lab 6: Post-Processing assignment page in canvas
+
+
+*/
+
 //BLOOM BUFFER
 
 // GLSL STARTER CODE BY DANIEL S. BUCKSTEIN
@@ -55,7 +93,8 @@ color4 blurEffect(in sCoord fragCoord, in sCoord uv)
     color = c;
     
     return color;
-}
+}//reference: "The OpenGL® Shading Language, Version 4.60.7" by John Kessenich, Google (Editor and Author) ; Dave Baldwin and Randi Rost
+ //https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
 
     
 
