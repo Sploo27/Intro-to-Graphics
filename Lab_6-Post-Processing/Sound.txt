@@ -1,0 +1,71 @@
+/*
+Author: Mitko Ivanov
+Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
+Assignment: Lab 6: Post-Processing
+Date Assigned: 10/09/2020
+Due Date: 10/16/2020
+Description: Use Shadertoy to follow allong given algorithms to learn about post-processing in GLSL
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the
+definition and consequences of plagiarism and acknowledge that the assessor
+of this assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of
+academic staff; and/or
+- Communicate a copy of this assignment to a plagiarism checking
+service (which may then retain a copy of this assignment on its
+database for the purpose of future plagiarism checking)
+
+Using influence from:
+
+- "The OpenGL® Shading Language, Version 4.60.7" by John Kessenich, Google (Editor and Author) ; Dave Baldwin and Randi Rost
+https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
+
+- "OpenGL SuperBible ("Blue Book"), 7ed (2015)" by Graham Sellers, Richard S. Wright Jr., Nicholas Haemel 
+https://f.usemind.org/files/b/1/UseMind.ORG_comprehensive-tutorial-and-reference_2015__.pdf
+
+-"GLSL 4.0 Cookbook (2011)" by David Wolff
+https://people.inf.elte.hu/plisaai/pdf/David%20Wolff%20-%20OpenGL%204.0%20Shading%20Language%20Cookbook%20(2).pdf
+
+-https://www.shadertoy.com/view/MdKGzG (cube-map camera)
+
+-https://www.shadertoy.com/view/tsByWV (sound tutorial)
+
+- Given code from the Lab 6: Post-Processing assignment page in canvas
+
+
+*/
+
+const float C = 261.63;
+const float D = 293.66;
+const float E = 329.63;
+const float F = 349.23;
+const float G = 392.00;
+const float A = 440.00;
+const float B = 493.88;
+const float C2 = 523.25;
+
+const float[] notes = float[] (C, D, E, F, G, A, B, C2);
+
+vec2 noteFreq(float freq, float time) {
+    float twoPi = 6.2831;
+    return vec2(sin(twoPi * freq * time));
+}
+
+vec2 mainSound(float time) {
+    vec2 result;
+    
+    for (int note = 0; note < notes.length(); note++) {
+        float x = float(note) * 1.0;
+        if (time > x) 
+        {
+        	result += noteFreq(notes[3], time - x);
+            result += noteFreq(notes[2], time - x);
+            result += noteFreq(notes[1], time - x);
+        }
+        
+        
+    }
+   
+    return result;
+}//reference: https://www.shadertoy.com/view/tsByWV
