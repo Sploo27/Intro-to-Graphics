@@ -119,6 +119,13 @@ void initPointLight(out pointLight pLight, in vec3 center, in vec4 color, in flo
     pLight.intensity = intensity;
 }
 
+//cross-fade function
+vec4 crossFade(vec4 image1, vec4 image2)
+{
+    float fade = (sin(iTime) * 0.5) + 0.5;
+    return mix(image1, image2, fade);
+}
+
 
 //------------------------------------------------------------
 // VIEWPORT INFO
@@ -237,15 +244,15 @@ color4 calcColor(in sViewport vp, in sRay ray)
     sCoord loc = px / res;
     
     sScalar ratio = res.y * vp.resolutionInv.y;
-    loc = loc * ratio + 0.1 * iTime; //zooming out
+    loc = loc * ratio;// + 0.1 * iTime; //zooming out
     
-    vec4 tex = texture(iChannel0, loc);
+    vec4 tex = texture(iChannel2, loc).xxxx;
     
     vec2  mouse = (iMouse.xy / iResolution.xy);
     
     //initializing the light
     pointLight light;
-    initPointLight(light, vec3(mouse.x, mouse.y, 0.0), tex, 0.05); 
+    initPointLight(light, vec3(mouse.x, mouse.y, 0.0), tex / vec4(2.0, 2.0, 2.0, 0.0), 0.05); 
     
     vec2 lightVector = light.center.xy - vp.uv;
     vec2 normalLightVector = lightVector * inversesqrt(lengthSq(lightVector));
@@ -255,7 +262,9 @@ color4 calcColor(in sViewport vp, in sRay ray)
     float attenuation = 1.0/(1.0 + length(lightVector)/light.intensity + (lengthSq(length(lightVector)) ) / (lengthSq(light.intensity)));
     float diffuseIntensity = diffusionCoef * attenuation;
     
-    return tex * diffuseIntensity;
+    vec4 crossFadeImage = crossFade(texture(iChannel0, loc).xxxx, texture(iChannel1, loc));
+    
+    return crossFadeImage * diffuseIntensity;
     
     
     
