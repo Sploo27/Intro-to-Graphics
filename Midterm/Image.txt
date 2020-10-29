@@ -102,7 +102,18 @@ float power(in float base, in float ex)
     return base;
 }
 
+struct sSphere
+{
+    vec4 center;
+    float radius;
+};
 
+    
+void initSphere(out sSphere sphere, in vec3 center, in float radius)
+{
+    sphere.center = asPoint(center);
+    sphere.radius = radius;
+}
 
 struct pointLight
 {
@@ -246,25 +257,60 @@ color4 calcColor(in sViewport vp, in sRay ray)
     sScalar ratio = res.y * vp.resolutionInv.y;
     loc = loc * ratio;// + 0.1 * iTime; //zooming out
     
-    vec4 tex = texture(iChannel2, loc).xxxx;
+    vec4 tex = texture(iChannel0, loc).xxxx;
     
     vec2  mouse = (iMouse.xy / iResolution.xy);
     
+    //initializing sphere
+    sSphere sphere;
+    initSphere(sphere, vec3(0.0, 0.0, -4.0), 0.5);
+    
     //initializing the light
     pointLight light;
-    initPointLight(light, vec3(mouse.x, mouse.y, 0.0), tex / vec4(2.0, 2.0, 2.0, 0.0), 0.05); 
+    initPointLight(light, vec3(mouse.x + 3.0, mouse.y + 3.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0), 100.0); 
     
-    vec2 lightVector = light.center.xy - vp.uv;
-    vec2 normalLightVector = lightVector * inversesqrt(lengthSq(lightVector));
+    //TEST
+    vec3 dp;
+    dp.xy = ray.direction.xy - sphere.center.xy;
+    float lSq = lengthSq(dp.xy),
+        rSq = sphere.radius * sphere.radius;
     
-    //calculations for lambertian reflectance
-    float diffusionCoef = max(0.0, (dot(vp.uv, normalLightVector)));
-    float attenuation = 1.0/(1.0 + length(lightVector)/light.intensity + (lengthSq(length(lightVector)) ) / (lengthSq(light.intensity)));
-    float diffuseIntensity = diffusionCoef * attenuation;
+    if(length(dp.xy) <= sphere.radius)
+    {
+        
+        //for now 'z' represents 'zSq'
+        dp.z = rSq - lSq;
+        	//sphere.radius * sphere.radius
+        	//- (dp.x * dp.x + dp.y * dp.y);
+        
+        vec3 position = sphere.center.xyz 
+            + vec3(dp.x, dp.y , sqrt(dp.z)); //zSq -> z
+        
+        vec3 normal = 
+            //normalize(position - sphere.center.xyz);
+            (position - sphere.center.xyz) / sphere.radius;
+        
+        
+        vec4 diffuseColor = vec4(normal * 0.5 + 0.5, 1.0);
+        
+        vec3 lightVector = light.center.xyz - position;
+        vec3 normalLightVector = lightVector * inversesqrt(lengthSq(lightVector));
+
+        //calculations for lambertian reflectance
+        float diffusionCoef = max(0.0, (dot(normal, normalLightVector)));
+        float attenuation = 1.0/(1.0 + length(lightVector)/light.intensity + (lengthSq(length(lightVector)) ) / (lengthSq(light.intensity)));
+        float diffuseIntensity = diffusionCoef * attenuation;
+
+        vec4 crossFadeImage = crossFade(tex.xxxx, texture(iChannel1, loc));
+
+        return crossFadeImage * diffuseIntensity;
     
-    vec4 crossFadeImage = crossFade(texture(iChannel0, loc).xxxx, texture(iChannel1, loc));
+    }
     
-    return crossFadeImage * diffuseIntensity;
+    
+    const vec3 warm = vec3(0.8, 0.4, 0.2), cool = vec3(0.2, 0.4, 0.8);
+	return vec4(mix(warm, cool, ray.direction.y), 1.0);
+    
     
     
     
