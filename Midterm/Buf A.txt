@@ -1,0 +1,123 @@
+/*
+Author: Mitko Ivanov
+Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
+Assignment: Midterm Project
+Date Assigned: 10/16/2020
+Due Date: 10/30/2020
+Description: Use Shadertoy to Experiment with all tequniques we have learned in GLSL so far
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the
+definition and consequences of plagiarism and acknowledge that the assessor
+of this assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of
+academic staff; and/or
+- Communicate a copy of this assignment to a plagiarism checking
+service (which may then retain a copy of this assignment on its
+database for the purpose of future plagiarism checking)
+
+Using influence from:
+
+- "The OpenGL® Shading Language, Version 4.60.7" by John Kessenich, Google (Editor and Author) ; Dave Baldwin and Randi Rost
+https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
+
+
+*/
+
+//BUFFER A
+
+
+//cross-fade function
+vec4 crossFade(vec4 image1, vec4 image2)
+{
+    float fade = (sin(iTime) * 0.5) + 0.5;
+    return mix(image1, image2, fade);
+}
+
+color4 calcColor(in sViewport vp, in sRay ray)
+{
+    sCoord px = vp.pixelCoord;
+    sCoord res = iChannelResolution[0].xy;
+    sCoord loc = px / res;
+    
+    sScalar ratio = res.y * vp.resolutionInv.y;
+    loc = loc * ratio;// + 0.1 * iTime; //zooming out
+    
+    vec4 tex = texture(iChannel0, loc).xxxx;
+    
+    vec2  mouse = (iMouse.xy / iResolution.xy);
+    
+    //initializing sphere
+    sSphere sphere;
+    initSphere(sphere, vec3(0.0, 0.0, -4.0), 0.5);
+    
+    //initializing the light
+    pointLight light;
+    initPointLight(light, vec3(mouse.x + 3.0, mouse.y + 3.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0), 100.0); 
+    
+    //TEST
+    vec3 dp;
+    dp.xy = ray.direction.xy - sphere.center.xy;
+    float lSq = lengthSq(dp.xy),
+        rSq = sphere.radius * sphere.radius;
+    
+    if(length(dp.xy) <= sphere.radius)
+    {
+        
+        //for now 'z' represents 'zSq'
+        dp.z = rSq - lSq;
+        	//sphere.radius * sphere.radius
+        	//- (dp.x * dp.x + dp.y * dp.y);
+        
+        vec3 position = sphere.center.xyz 
+            + vec3(dp.x, dp.y , sqrt(dp.z)); //zSq -> z
+        
+        vec3 normal = 
+            //normalize(position - sphere.center.xyz);
+            (position - sphere.center.xyz) / sphere.radius;
+        
+        
+        vec4 diffuseColor = vec4(normal * 0.5 + 0.5, 1.0);
+        
+        vec3 lightVector = light.center.xyz - position;
+        vec3 normalLightVector = lightVector * inversesqrt(lengthSq(lightVector));
+
+        //calculations for lambertian reflectance
+        float diffusionCoef = max(0.0, (dot(normal, normalLightVector)));
+        float attenuation = 1.0/(1.0 + length(lightVector)/light.intensity + (lengthSq(length(lightVector)) ) / (lengthSq(light.intensity)));
+        float diffuseIntensity = diffusionCoef * attenuation;
+
+        vec4 crossFadeImage = crossFade(tex.xxxx, texture(iChannel1, loc));
+
+        return crossFadeImage * diffuseIntensity;
+    
+    }
+    
+}
+
+
+//------------------------------------------------------------
+// SHADERTOY MAIN
+
+// mainImage: process the current pixel (exactly one call per pixel)
+//    fragColor: output final color for current pixel
+//    fragCoord: input location of current pixel in image (in pixels)
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
+{
+    // viewing plane (viewport) inputs
+    const sBasis eyePosition = sBasis(0.0);
+    const sScalar viewportHeight = 2.0, focalLength = 1.5;
+    
+    // viewport info
+    sViewport vp;
+
+    // ray
+    sRay ray;
+    
+    // render
+    initViewport(vp, viewportHeight, focalLength, fragCoord, iResolution.xy);
+    initRayPersp(ray, eyePosition, vp.viewportPoint.xyz);
+    fragColor = calcColor(vp, ray);
+   
+    
+}
