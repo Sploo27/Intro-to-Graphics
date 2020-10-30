@@ -39,13 +39,12 @@ void mainImage(out color4 fragColor, in sCoord fragCoord)
     // TESTING
     // set iChannel0 to 'Misc/Buffer A' and fetch sample
     
-    vec4 tex1 = texture(iChannel0, uv);
-    vec4 tex2 = texture(iChannel1, uv);
+    vec4 tex1 = texture(iChannel0, uv);//just the cube map
+    vec4 tex2 = texture(iChannel1, uv);//cube map with the sphere
     
-    fragColor = tex1; //just the sphere w/o background
+    //fragColor = tex1; //just the sphere w/o background
     
-    fragColor = tex2; //sphere in the cube map
+    fragColor = tex2;
     
-    //fragColor = tex2 + tex1;
     
 }

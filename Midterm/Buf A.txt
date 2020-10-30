@@ -33,7 +33,7 @@ vec2 rotation(vec2 p, float angle) {
     float s = sin(angle);
     float c = cos(angle);
     
-    mat2 rotMax = mat2(c,s,-s,c);
+    mat2 rotMax = mat2(c,s,-s,c);//rotation matrix
     
     return p * rotMax;
     

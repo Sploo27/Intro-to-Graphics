@@ -33,8 +33,6 @@ color4 calcColor(in sViewport vp, in sRay ray, in sCoord fragCoord)
     sCoord res = iChannelResolution[0].xy;
     sCoord loc = px / res;
     
-    
-    
     vec2  mouse = (iMouse.xy / iResolution.xy);
     
     sScalar ratio = res.y * vp.resolutionInv.x;
@@ -43,7 +41,7 @@ color4 calcColor(in sViewport vp, in sRay ray, in sCoord fragCoord)
     sCoord uv = px/res;
     uv = uv * ratio;
     
-    loc.x = loc.x - 2. * -mouse.x;
+    loc.x = loc.x - 2. * -mouse.x; //just adjusts the horizontal axis 
         
     vec4 tex = texture(iChannel0, loc);
     
@@ -89,11 +87,11 @@ color4 calcColor(in sViewport vp, in sRay ray, in sCoord fragCoord)
         float attenuation = 1.0/(1.0 + length(lightVector)/light.intensity + (lengthSq(length(lightVector)) ) / (lengthSq(light.intensity)));
         float diffuseIntensity = diffusionCoef * attenuation;
 
-        return tex * diffuseIntensity;
+        return tex * diffuseIntensity;//draws the shaded sphere with the texture mapped to it
     
     }
     
-    return texture(iChannel1, uv);
+    return texture(iChannel1, uv);//draws the cube mab where the sphere is not
     
 }
 
