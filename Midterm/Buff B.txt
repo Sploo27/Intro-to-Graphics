@@ -24,26 +24,56 @@ https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
 
 */
 
+//BUFFER B
+
+
+vec2 rotation(vec2 p, float angle) {
+ 
+    angle = radians(angle);
+    float s = sin(angle);
+    float c = cos(angle);
+    
+    mat2 rotMax = mat2(c,s,-s,c);
+    
+    return p * rotMax;
+    
+}
+
+color4 calcColor(in sViewport vp, in sRay ray, in sCoord fragCoord)
+{
+    vec2 uv = (fragCoord.xy - iResolution.xy * .5) / iResolution.y;
+    vec2  mouse = (iMouse.xy / iResolution.xy);
+    
+    vec3 dir = vec3(uv, 1.0);
+    
+    dir.xz = rotation(dir.xz, 190.0 * -mouse.x);
+    
+    return texture(iChannel0, dir); 
+}
+
+
 //------------------------------------------------------------
 // SHADERTOY MAIN
 
 // mainImage: process the current pixel (exactly one call per pixel)
 //    fragColor: output final color for current pixel
 //    fragCoord: input location of current pixel in image (in pixels)
-void mainImage(out color4 fragColor, in sCoord fragCoord)
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
-    // setup
-    // test UV for input image
-    sCoord uv = fragCoord / iChannelResolution[0].xy;
+    // viewing plane (viewport) inputs
+    const sBasis eyePosition = sBasis(0.0);
+    const sScalar viewportHeight = 2.0, focalLength = 1.5;
     
-    // TESTING
-    // set iChannel0 to 'Misc/Buffer A' and fetch sample
+    // viewport info
+    sViewport vp;
+
+    // ray
+    sRay ray;
     
-    vec4 tex1 = texture(iChannel0, uv);
-    vec4 tex2 = texture(iChannel1, uv);
-    
-    fragColor = tex1; //just the sphere w/o background
-    
-    //fragColor = tex2 + tex1;
+    // render
+    initViewport(vp, viewportHeight, focalLength, fragCoord, iResolution.xy);
+    initRayPersp(ray, eyePosition, vp.viewportPoint.xyz);
+    fragColor = calcColor(vp, ray, fragCoord);
+   
     
 }
