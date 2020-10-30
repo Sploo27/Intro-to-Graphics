@@ -24,15 +24,8 @@ https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
 
 */
 
-//BUFFER A
+//BUFFER B
 
-
-//cross-fade function
-vec4 crossFade(vec4 image1, vec4 image2)
-{
-    float fade = (sin(iTime) * 0.5) + 0.5;
-    return mix(image1, image2, fade);
-}
 
 color4 calcColor(in sViewport vp, in sRay ray, in sCoord fragCoord)
 {
@@ -95,8 +88,6 @@ color4 calcColor(in sViewport vp, in sRay ray, in sCoord fragCoord)
         float diffusionCoef = max(0.0, (dot(normal, normalLightVector)));
         float attenuation = 1.0/(1.0 + length(lightVector)/light.intensity + (lengthSq(length(lightVector)) ) / (lengthSq(light.intensity)));
         float diffuseIntensity = diffusionCoef * attenuation;
-
-        //vec4 crossFadeImage = crossFade(tex.xxxx, texture(iChannel1, loc));
 
         return tex * diffuseIntensity;
     

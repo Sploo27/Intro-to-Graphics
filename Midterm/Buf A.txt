@@ -24,7 +24,7 @@ https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
 
 */
 
-//BUFFER B
+//BUFFER A
 
 
 vec2 rotation(vec2 p, float angle) {
