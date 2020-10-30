@@ -44,6 +44,8 @@ void mainImage(out color4 fragColor, in sCoord fragCoord)
     
     fragColor = tex1; //just the sphere w/o background
     
+    fragColor = tex2; //sphere in the cube map
+    
     //fragColor = tex2 + tex1;
     
 }

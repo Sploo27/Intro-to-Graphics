@@ -24,86 +24,31 @@ https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
 
 */
 
-//BUFFER A
+//BUFFER B
 
 
-//cross-fade function
-vec4 crossFade(vec4 image1, vec4 image2)
-{
-    float fade = (sin(iTime) * 0.5) + 0.5;
-    return mix(image1, image2, fade);
+vec2 rotation(vec2 p, float angle) {
+ 
+    angle = radians(angle);
+    float s = sin(angle);
+    float c = cos(angle);
+    
+    mat2 rotMax = mat2(c,s,-s,c);
+    
+    return p * rotMax;
+    
 }
 
 color4 calcColor(in sViewport vp, in sRay ray, in sCoord fragCoord)
 {
-    sCoord px = vp.pixelCoord;
-    sCoord res = iChannelResolution[0].xy;
-    sCoord loc = px / res;
-    
-    
-    
+    vec2 uv = (fragCoord.xy - iResolution.xy * .5) / iResolution.y;
     vec2  mouse = (iMouse.xy / iResolution.xy);
     
-    sScalar ratio = res.y * vp.resolutionInv.x;
-    loc = loc * ratio; // + 0.1 * iTime; //zooming out
+    vec3 dir = vec3(uv, 1.0);
     
-    sCoord uv = px/res;
-    uv = uv * ratio;
+    dir.xz = rotation(dir.xz, 190.0 * -mouse.x);
     
-    loc.x = loc.x - 2. * -mouse.x;
-        
-    vec4 tex = texture(iChannel0, loc);
-    
-    
-    
-    //initializing sphere
-    sSphere sphere;
-    initSphere(sphere, vec3(0.0, 0.0, -4.0), 0.5);
-    
-    //initializing the light
-    pointLight light;
-    initPointLight(light, vec3(3.0, 3.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0), 100.0); 
-    
-    //TEST
-    vec3 dp;
-    dp.xy = ray.direction.xy - sphere.center.xy;
-    float lSq = lengthSq(dp.xy),
-        rSq = sphere.radius * sphere.radius;
-    
-    if(length(dp.xy) <= sphere.radius)
-    {
-        
-        //for now 'z' represents 'zSq'
-        dp.z = rSq - lSq;
-        	//sphere.radius * sphere.radius
-        	//- (dp.x * dp.x + dp.y * dp.y);
-        
-        vec3 position = sphere.center.xyz 
-            + vec3(dp.x, dp.y , sqrt(dp.z)); //zSq -> z
-        
-        vec3 normal = 
-            //normalize(position - sphere.center.xyz);
-            (position - sphere.center.xyz) / sphere.radius;
-        
-        
-        vec4 diffuseColor = vec4(normal * 0.5 + 0.5, 1.0);
-        
-        vec3 lightVector = light.center.xyz - position;
-        vec3 normalLightVector = lightVector * inversesqrt(lengthSq(lightVector));
-
-        //calculations for lambertian reflectance
-        float diffusionCoef = max(0.0, (dot(normal, normalLightVector)));
-        float attenuation = 1.0/(1.0 + length(lightVector)/light.intensity + (lengthSq(length(lightVector)) ) / (lengthSq(light.intensity)));
-        float diffuseIntensity = diffusionCoef * attenuation;
-
-        //vec4 crossFadeImage = crossFade(tex.xxxx, texture(iChannel1, loc));
-
-        return tex * diffuseIntensity;
-    
-    }
-    
-    return texture(iChannel1, uv);
-    
+    return texture(iChannel0, dir); 
 }
 
 
