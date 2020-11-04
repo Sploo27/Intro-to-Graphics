@@ -1,0 +1,102 @@
+#version 300 es
+//version 450 
+
+//MAIN DUTY: process VERTEX ATTRIBUTES
+//	3D point in space
+//	normal vector
+//	uv: texture coordinate
+// OBJECT-SPACE
+layout (location = 0) in vec4 aPosition;
+layout (location = 1) in vec3 aNormal;
+//in vec4 aPosition
+
+// TEXTURE SPACE (their own space)
+//layout (location = 2) in vec2 aTexcoord;
+layout (location = 2) in vec4 aTexcoord;
+
+//TRANSFORM UNIFORM
+uniform mat4 uModelMat;
+uniform mat4 uViewMat;
+uniform mat4 uProjMat;
+uniform mat4 uViewProjMat;
+
+//VARYING
+
+// PER-VERTEX: pass final color
+out vec4 vColor;
+
+//PER-FRAGMENT: pass requirements for final color
+out vec4 vNormal;
+
+//out vec2 vTexcoord;
+out vec4 vTexcoord;
+
+void main()
+{
+	//REQUIRED: write to this variable:
+	//problem: gl_Position is in "clip-space"
+	//problem aPosition is in "object-space"
+	gl_Position = aPosition;
+	
+	//position in world space(not yet correct)
+	//vec4 pos_world = uModelMat * aPosition;
+	//gl_Position = pos_world;
+	
+	//position in camera space(still not right)
+	//vec4 pos_view = uViewMat * pos_world;
+	//vec4 pos_view = uViewMat * uModelMat * aPosition;
+	//gl_Position = pos_view;
+	
+	//position in clip space (hooray)
+	//vec4 pos_clip = uProjMat * pos_view;
+	//vec4 pos_clip = uViewProjMat * pos_world;
+	//vec4 pos_clip = uProjMat * uViewMat * uModelMat * aPosition;
+	
+	//POSITION PIPELINE	
+	mat4 modelViewMat = uViewMat * uModelMat;
+	vec4 pos_view = modelViewMat * aPosition;
+	vec4 pos_clip = uProjMat * pos_view;
+	gl_Position = pos_clip;
+	
+	//NORMAL PIPELINE
+	vec3 nrm_view = mat3(modelViewMat) * aNormal; 
+							//color never changes because view space 
+							//is always pointing in the same direction
+								
+							//however when stretched/scaled up, normal becomes skewed 
+							//because we are using the same method as position
+	
+	mat3 normalMat = transpose(inverse(mat3(modelViewMat)));
+							//this would normaly be a uniform but this
+							//website does not support it
+	nrm_view = normalMat * aNormal;
+							//now when scaled up, normal does not
+							//become skewed and color remains the same
+	
+	//TEXCOORD PIPELINE
+	mat4 atlasMat = mat4(0.5, 0.0, 0.0, 0.0,
+						 0.0, 0.5, 0.0, 0.0,
+						 0.0, 0.0, 1.0, 0.0,
+						 0.25, 0.25, 0.0, 1.0);//matricies are column major
+	vec4 uv_atlas = atlasMat * aTexcoord;
+	
+	//OPTIONAL: pass varyings
+	//vColor = vec4(1.0, 0.5, 0.0, 1.0);
+	//vColor = pos_view;
+	
+	//DEBUGGING
+	
+	//PER-VERTEX: output is final color
+	//vColor = aPosition;
+	//example: output normal as if it's color
+	//vColor = vec4(aNormal * 0.5 + 0.5, 1.0);
+	
+	//PER-FRAGMENT: output data needed for FS to calc final color
+	//vNormal = vec4(aNormal, 0.0);
+	vNormal = vec4(nrm_view, 0.0);
+	
+	//vTexcoord = aTexcoord;
+	vTexcoord = uv_atlas;
+	
+	//gl_Position = uProjMat * modelViewMat * aTexcoord;
+}
