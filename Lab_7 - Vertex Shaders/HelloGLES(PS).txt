@@ -16,23 +16,11 @@ in vec4 vColor;
 //PER-FRAGMENT: pass requirements for final color
 in vec4 vNormal;
 
+//Lighting PER-FRAGMENT
+in vec3 vLightVector;
+
 //in vec2 vTexcoord;
 in vec4 vTexcoord;
-//LIGHTING
-struct pointLight
-{
-    vec4 center;
-    vec4 color;
-    float intensity; //how far the light will reach
-};
-    
-
-void initPointLight(out pointLight pLight, in vec3 center, in vec4 color, in float intensity)
-{
-    pLight.center = vec4(center, 1.0);
-    pLight.color = color;
-    pLight.intensity = intensity;
-}
 
 //OPTIMIZATION
 float power(in float base, in int ex)
@@ -56,21 +44,23 @@ void main()
 	//rtFragColor = vec4(N.xyz * 0.5 + 0.5, 1.0);
 	
 	//LIGHTING
-	pointLight phongLight;
-	initPointLight(phongLight, vec3(-30.0, -30.0, 00.0), vec4(1.0, 1.0, 1.0, 1.0), 1.0);
-	
-	//diffuse intensity
-	vec3 lightVector = phongLight.center.xyz - vColor.xyz;
-	
 	vec3 viewVector = normalize(vColor.xyz);//issues
-    vec3 reflectedLightVector = reflect(-normalize(lightVector), vec3(0.0));
+    vec3 reflectedLightVector = reflect(-normalize(vLightVector), vec3(0.0));
     float specularCoef = max(0.0, dot(viewVector, reflectedLightVector));
     
-    int highlightExponent = 0;
+    int highlightExponent = 2;
     
     float specularFocus = power(specularCoef, highlightExponent);
-	rtFragColor = vec4(N.xyz * 0.5 + 0.5, 1.0) * specularFocus;
+    
+    
+	vec4 specularColor = vec4(1.0);
+	
+	//Per-vertex
 	//rtFragColor = vColor;
+	
+	//Per-fragment
+	rtFragColor = specularColor * specularFocus;
+	
 	
 	//rtFragColor = vec4(vTexcoord, 0.0, 1.0);
 	//rtFragColor = vTexcoord;
