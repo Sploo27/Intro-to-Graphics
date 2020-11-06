@@ -20,6 +20,10 @@ uniform mat4 uViewMat;
 uniform mat4 uProjMat;
 uniform mat4 uViewProjMat;
 
+//TEXTURE UNIFORM
+uniform int uTexture;
+//layout (location = 0) in vec4 aTex;
+
 //VARYING
 
 // PER-VERTEX: pass final color
@@ -30,6 +34,32 @@ out vec4 vNormal;
 
 //out vec2 vTexcoord;
 out vec4 vTexcoord;
+
+//LIGHTING
+struct pointLight
+{
+    vec4 center;
+    vec4 color;
+    float intensity; //how far the light will reach
+};
+    
+
+void initPointLight(out pointLight pLight, in vec3 center, in vec4 color, in float intensity)
+{
+    pLight.center = vec4(center, 1.0);
+    pLight.color = color;
+    pLight.intensity = intensity;
+}
+
+//OPTIMIZATION
+float power(in float base, in int ex)
+{
+    for(int i = 0; i < ex; ++i)
+    {
+        base *= base;
+    }
+    return base;
+}
 
 void main()
 {
@@ -96,7 +126,29 @@ void main()
 	vNormal = vec4(nrm_view, 0.0);
 	
 	//vTexcoord = aTexcoord;
-	vTexcoord = uv_atlas;
+	//vTexcoord = uv_atlas;
 	
 	//gl_Position = uProjMat * modelViewMat * aTexcoord;
+	
+	//LIGHTING
+	pointLight phongLight;
+	initPointLight(phongLight, vec3(-30.0, -30.0, 00.0), vec4(1.0, 1.0, 1.0, 1.0), 1.0);
+	
+	//diffuse intensity
+	vec3 lightVector = phongLight.center.xyz - aPosition.xyz;
+	
+	//phong reflectance
+	vec3 viewVector = normalize(aPosition.xyz);
+    vec3 reflectedLightVector = reflect(-normalize(lightVector), vec3(0.0));
+    float specularCoef = max(0.0, dot(viewVector, reflectedLightVector));
+    
+    int highlightExponent = 1;
+    
+    float specularFocus = power(specularCoef, highlightExponent);
+    
+    
+    vColor = aPosition * specularFocus;    
+	
+	
+	
 }

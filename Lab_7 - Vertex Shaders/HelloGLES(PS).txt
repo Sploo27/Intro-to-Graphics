@@ -20,17 +20,18 @@ in vec4 vNormal;
 in vec4 vTexcoord;
 
 
+
 void main()
 {
 	//rtFragColor = vec4(0.5, 1.0, 0.0, 1.0);
 	
 	//PER-VERTEX: just display the final color from VS
-	//rtFragColor = vColor;
+	rtFragColor = vColor;
 	
 	//PER-FRAGMENT: calculate and display
 	vec4 N = normalize(vNormal);
 	//rtFragColor = vec4(N.xyz * 0.5 + 0.5, 1.0);
 	
 	//rtFragColor = vec4(vTexcoord, 0.0, 1.0);
-	rtFragColor = vTexcoord;
+	//rtFragColor = vTexcoord;
 }
