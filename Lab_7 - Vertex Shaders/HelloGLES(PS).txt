@@ -6,7 +6,7 @@ Author: Mitko Ivanov
 Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
 Assignment: Lab 7: Vertex Shaders
 Date Assigned: 10/30/2020
-Due Date: 111/6/2020
+Due Date: 11/6/2020
 Description: Use SHADERed as well as material given to learn about vertex shaders
 Certification of Authenticity:
 I certify that this is entirely my own work, except where I have given

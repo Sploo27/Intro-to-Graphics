@@ -6,7 +6,7 @@ Author: Mitko Ivanov
 Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
 Assignment: Lab 7: Vertex Shaders
 Date Assigned: 10/30/2020
-Due Date: 111/6/2020
+Due Date: 11/6/2020
 Description: Use SHADERed as well as material given to learn about vertex shaders
 Certification of Authenticity:
 I certify that this is entirely my own work, except where I have given
@@ -112,7 +112,7 @@ void main()
 	
 	//POSITION PIPELINE	
 	mat4 modelViewMat = uViewMat * uModelMat;
-	vec4 pos_view = modelViewMat * aPosition;
+	vec4 pos_view = modelViewMat * aPosition;//this is what we use in the lightVector
 	vec4 pos_clip = uProjMat * pos_view;
 	gl_Position = pos_clip;
 	
@@ -179,9 +179,9 @@ void main()
     vec4 tex = texture(uTexture, aPosition.xy);
     
     //Per-vertex
-    vColor = aPosition * specularFocus;    
+    //vColor = aPosition * specularFocus;    
 	
-	//vColor = tex * specularFocus; //texture mapped
+	vColor = tex * specularFocus; //texture mapped
 	
 	//Pass algorithm data to fragment shader
 	vLightVector = lightVector;
