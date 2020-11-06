@@ -147,10 +147,10 @@ void main()
     float specularFocus = power(specularCoef, highlightExponent);
     
     //Per-vertex, view-space
-    vColor = pos_view * specularFocus;
+    //vColor = pos_view * specularFocus;
     
     //Per-vertex, object-space
-    //vColor = aPosition * specularFocus;    
+    vColor = aPosition * specularFocus;    
 	
 	
 	
