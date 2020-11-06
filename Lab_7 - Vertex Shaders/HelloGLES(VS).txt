@@ -142,11 +142,14 @@ void main()
     vec3 reflectedLightVector = reflect(-normalize(lightVector), vec3(0.0));
     float specularCoef = max(0.0, dot(viewVector, reflectedLightVector));
     
-    int highlightExponent = 1;
+    int highlightExponent = 0;
     
     float specularFocus = power(specularCoef, highlightExponent);
     
+    //Per-vertex, view-space
+    //vColor = pos_view * specularFocus;
     
+    //Per-vertex, object-space
     vColor = aPosition * specularFocus;    
 	
 	
