@@ -1,6 +1,32 @@
 #version 300 es
 //version 450 
 
+/*
+Author: Mitko Ivanov
+Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
+Assignment: Lab 7: Vertex Shaders
+Date Assigned: 10/30/2020
+Due Date: 111/6/2020
+Description: Use SHADERed as well as material given to learn about vertex shaders
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the
+definition and consequences of plagiarism and acknowledge that the assessor
+of this assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of
+academic staff; and/or
+- Communicate a copy of this assignment to a plagiarism checking
+service (which may then retain a copy of this assignment on its
+database for the purpose of future plagiarism checking)
+
+Using influence from:
+
+- Given code from the Lab 7: Intro to Vertex Shaders & Transformations assignment page in canvas
+
+
+*/
+
+
 //MAIN DUTY: process VERTEX ATTRIBUTES
 //	3D point in space
 //	normal vector
@@ -137,8 +163,8 @@ void main()
 	initPointLight(phongLight, vec3(-30.0, -30.0, 00.0), vec4(1.0, 1.0, 1.0, 1.0), 1.0);
 	
 	//diffuse intensity
-	vec3 lightVector = phongLight.center.xyz - pos_view.xyz; //view space
-	//vec3 lightVector = phongLight.center.xyz - aPosition.xyz;  //object space
+	//vec3 lightVector = phongLight.center.xyz - pos_view.xyz; //view space
+	vec3 lightVector = phongLight.center.xyz - aPosition.xyz;  //object space
 	
 	
 	//phong reflectance
@@ -154,7 +180,8 @@ void main()
     
     //Per-vertex
     vColor = aPosition * specularFocus;    
-	//vColor = tex * specularFocus;
+	
+	//vColor = tex * specularFocus; //texture mapped
 	
 	//Pass algorithm data to fragment shader
 	vLightVector = lightVector;

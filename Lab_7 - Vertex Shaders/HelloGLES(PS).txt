@@ -1,6 +1,31 @@
 #version 300 es
 //version 450 
 
+/*
+Author: Mitko Ivanov
+Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
+Assignment: Lab 7: Vertex Shaders
+Date Assigned: 10/30/2020
+Due Date: 111/6/2020
+Description: Use SHADERed as well as material given to learn about vertex shaders
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the
+definition and consequences of plagiarism and acknowledge that the assessor
+of this assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of
+academic staff; and/or
+- Communicate a copy of this assignment to a plagiarism checking
+service (which may then retain a copy of this assignment on its
+database for the purpose of future plagiarism checking)
+
+Using influence from:
+
+- Given code from the Lab 7: Intro to Vertex Shaders & Transformations assignment page in canvas
+
+
+*/
+
 #ifdef GL_ES
 precision highp float;
 #endif //GL_ES
@@ -48,7 +73,7 @@ void main()
     vec3 reflectedLightVector = reflect(-normalize(vLightVector), vec3(0.0));
     float specularCoef = max(0.0, dot(viewVector, reflectedLightVector));
     
-    int highlightExponent = 2;
+    int highlightExponent = 1;
     
     float specularFocus = power(specularCoef, highlightExponent);
     
@@ -56,10 +81,10 @@ void main()
 	vec4 specularColor = vec4(1.0);
 	
 	//Per-vertex
-	//rtFragColor = vColor;
+	rtFragColor = vColor;
 	
 	//Per-fragment
-	rtFragColor = specularColor * specularFocus;
+	//rtFragColor = specularColor * specularFocus;
 	
 	
 	//rtFragColor = vec4(vTexcoord, 0.0, 1.0);
