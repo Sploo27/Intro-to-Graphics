@@ -138,7 +138,7 @@ void main()
 	vec3 lightVector = phongLight.center.xyz - aPosition.xyz;
 	
 	//phong reflectance
-	vec3 viewVector = normalize(aPosition.xyz);
+	vec3 viewVector = normalize(aPosition.xyz);//issues
     vec3 reflectedLightVector = reflect(-normalize(lightVector), vec3(0.0));
     float specularCoef = max(0.0, dot(viewVector, reflectedLightVector));
     
@@ -147,10 +147,10 @@ void main()
     float specularFocus = power(specularCoef, highlightExponent);
     
     //Per-vertex, view-space
-    //vColor = pos_view * specularFocus;
+    vColor = pos_view * specularFocus;
     
     //Per-vertex, object-space
-    vColor = aPosition * specularFocus;    
+    //vColor = aPosition * specularFocus;    
 	
 	
 	
