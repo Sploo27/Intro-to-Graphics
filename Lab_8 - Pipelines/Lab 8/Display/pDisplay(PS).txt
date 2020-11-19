@@ -27,5 +27,5 @@ void main()
 	//test
 	rtFragColor = vec4(1.0, 0.5, 0.0, 1.0);
 	rtFragColor = vec4(uv, 0.0, 1.0);
-	rtFragColor = 1.0 - col;
+	rtFragColor = col;
 }

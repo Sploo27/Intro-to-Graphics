@@ -4,11 +4,19 @@
 precision highp float;
 #endif //GL_ES
 
+uniform sampler2D uTex;
+uniform vec2 uResolution;
+
 in vec4 vNormal;
+in vec2 vTexcoord;
 
 layout (location = 0) out vec4 rtFragColor;
 
 void main()
 {
+	vec2 uv = vTexcoord;
+	vec4 col = texture(uTex, uv);
+
 	rtFragColor = vNormal;
+	rtFragColor = col;
 }
