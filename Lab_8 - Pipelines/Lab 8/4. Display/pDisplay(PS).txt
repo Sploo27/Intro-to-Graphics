@@ -1,10 +1,38 @@
-#version 300 es
+/*
+Author: Mitko Ivanov
+Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
+Assignment: Lab 8: Pipelines
+Date Assigned: 11/6/2020
+Due Date: 11/20/2020
+Description: Use SHADERed as well as material given to learn about shader pipelines
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the
+definition and consequences of plagiarism and acknowledge that the assessor
+of this assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of
+academic staff; and/or
+- Communicate a copy of this assignment to a plagiarism checking
+service (which may then retain a copy of this assignment on its
+database for the purpose of future plagiarism checking)
+
+Using influence from:
+
+- Given code from the Lab 8: Shader Pipelines assignment page in canvas
+
+
+*/
+
+#version 450
 
 #ifdef GL_ES
 precision highp float;
 #endif //GL_ES
 
-uniform sampler2D uTex;
+uniform sampler2D uTex0;//final blur
+uniform sampler2D uTex1;//original image
+uniform sampler2D uTex2;//image on sphere
+uniform sampler2D uTex3;//bright passed shpere
 uniform vec2 uResolution;
 
 //VARYING
@@ -21,11 +49,24 @@ void main()
 	
 	//vec2 uv = gl_FragCoord.xy / uResolution;
 	vec2 uv = vTexcoord;
-	vec4 col = texture(uTex, uv);
+	vec4 color1 = texture(uTex1, uv);//original image
+	vec4 color2 = texture(uTex2, uv);//image on sphere
+	vec4 color3 = texture(uTex3, uv);//bright passed sphere
+	vec4 color4 = texture(uTex0, uv);//final blur
 	
 
 	//test
 	rtFragColor = vec4(1.0, 0.5, 0.0, 1.0);
 	rtFragColor = vec4(uv, 0.0, 1.0);
-	rtFragColor = col;
+	
+	
+	rtFragColor = color1;//original image
+	
+	//rtFragColor = color2; //image on sphere
+	
+	//rtFragColor = color3; //bright passed sphere
+	
+	//rtFragColor = color4; //final blur
+	
+	//rtFragColor = color2 + color3 + color4; //addition composition
 }

@@ -1,4 +1,29 @@
-#version 300 es
+/*
+Author: Mitko Ivanov
+Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
+Assignment: Lab 8: Pipelines
+Date Assigned: 11/6/2020
+Due Date: 11/20/2020
+Description: Use SHADERed as well as material given to learn about shader pipelines
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the
+definition and consequences of plagiarism and acknowledge that the assessor
+of this assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of
+academic staff; and/or
+- Communicate a copy of this assignment to a plagiarism checking
+service (which may then retain a copy of this assignment on its
+database for the purpose of future plagiarism checking)
+
+Using influence from:
+
+- Given code from the Lab 8: Shader Pipelines assignment page in canvas
+
+
+*/
+
+#version 450
 
 #ifdef GL_ES
 precision highp float;
@@ -10,10 +35,51 @@ in vec2 vTexcoord;
 
 layout (location = 0) out vec4 rtFragColor;
 
+
+
+const float weights[] = float[](0.0024499299678342,
+									0.0043538453346397,
+									0.0073599963704157,
+									0.0118349786570722,
+									0.0181026699707781,
+                                    0.0263392293891488,
+                                    0.0364543006660986,
+                                    0.0479932050577658,
+                                    0.0601029809166942,
+                                    0.0715974486241365,
+                                    0.0811305381519717,
+                                    0.0874493212267511,
+                                    0.0896631113333857,
+                                    0.0874493212267511,
+                                    0.0811305381519717,
+                                    0.0715974486241365,
+                                    0.0601029809166942,
+                                    0.0479932050577658,
+                                    0.0364543006660986,
+                                    0.0263392293891488,
+                                    0.0181026699707781,
+                                    0.0118349786570722,
+                                    0.0073599963704157,
+                                    0.0043538453346397,
+                                    0.0024499299678342);
+
 void main()
 {
 	vec2 uv = vTexcoord;
 	vec4 col = texture(uTex, uv);
 	
-	rtFragColor = col;
+
+    
+    vec4 color = vec4(0.0);
+    ivec2 p = ivec2(gl_FragCoord.xy) - ivec2(0, weights.length() >> 1);
+    
+    int i;
+    for (i = 0; i < weights.length(); i++)
+    {
+        ivec2 temp = p + ivec2(0.0, i);
+    	color = color + (texelFetch(uTex, temp, 0) * weights[i]);
+    }
+    
+    rtFragColor = col;
+	rtFragColor = color;
 }
