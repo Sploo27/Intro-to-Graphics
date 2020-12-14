@@ -42,13 +42,12 @@
 	</objects>
 	<cameras />
 	<settings>
-		<entry type="property" name="gScene1" item="pipe" />
 		<entry type="file" name="gScene1" shader="vs" />
 		<entry type="file" name="gScene1" shader="ps" />
 		<entry type="file" name="gScene1" shader="gs" />
 		<entry type="camera" fp="false">
-			<distance>5</distance>
-			<pitch>0</pitch>
+			<distance>7</distance>
+			<pitch>1</pitch>
 			<yaw>180</yaw>
 			<roll>360</roll>
 		</entry>
