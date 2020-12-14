@@ -19,12 +19,16 @@ layout (triangle_strip, max_vertices = 12) out;
 //triangle_strip
 
 in VS_OUT {
-    vec3 normal;
+    vec2 vTexcoord;
 } gs_in[];
 
-out GS_OUT {
-	vec3 normal;
-} gs_out[];
+out vec2 gTexcoord;
+
+//out GS_OUT {
+//	vec2 gTexcoord;
+//} gs_out;
+
+
 
 uniform mat4 uModelMat, uViewMat, uProjMat;
 
@@ -33,27 +37,43 @@ void createTriangle(vec3 offset)
 {
 	//gl_Position.xyz = (gs_in[2].normal * 0.5) + offset; //testing with the normal
 	gl_Position.xyz = (gl_in[2].gl_Position.xyz * 0.5) + offset;
-	
+	gTexcoord = gs_in[2].vTexcoord;
 	EmitVertex();
 	
-	for(int i = 0; i < gs_in.length(); i++)
+	for(int i = 0; i < gl_in.length(); i++)
 	{	
 		//gl_Position.xyz = (gs_in[i].normal * 0.5) + offset; //testing with the normal
 		gl_Position.xyz = (gl_in[i].gl_Position.xyz * 0.5) + offset;
-		
+		gTexcoord = gs_in[i].vTexcoord;
 		EmitVertex();
 	}
 	
 }
 
 void main() {
+/*
+	gl_Position = gl_in[0].gl_Position; 
+	gTexcoord = gs_in[0].vTexcoord;
+    EmitVertex();
+    
+    gl_Position = gl_in[1].gl_Position; 
+    gTexcoord = gs_in[1].vTexcoord;
+    EmitVertex();
+    
+    gl_Position = gl_in[2].gl_Position; 
+    gTexcoord = gs_in[2].vTexcoord;
+    EmitVertex();
+    */
+    
     gl_Position = gl_in[0].gl_Position; 
+    //gTexcoord = gs_in[0].vTexcoord;
     EmitVertex();		//I found this last one makes it viewable on both sides
     
     
     EndPrimitive(); //this prints out each triangle in the geometry
     
-    float temp0x = gl_in[0].gl_Position.x - (gl_in[0].gl_Position.x * 0.5);
+    
+    float temp0x = gl_in[0].gl_Position.x - (gl_in[0].gl_Position.x * 0.5);//calculations for where each new triangle should be positioned
     float temp1x = gl_in[1].gl_Position.x - (gl_in[1].gl_Position.x * 0.5);
     float temp2x = gl_in[2].gl_Position.x - (gl_in[2].gl_Position.x * 0.5);
     
