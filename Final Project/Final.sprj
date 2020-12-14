@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <project version="2">
 	<pipeline>
-		<pass name="Light" type="shader" active="true">
-			<shader type="vs" path="shaders\LightVS.glsl" entry="main" />
-			<shader type="ps" path="shaders\LightPS.glsl" entry="main" />
-			<shader used="true" type="gs" path="shaders\LightGS.glsl" entry="main" />
+		<pass name="gScene1" type="shader" active="true">
+			<shader type="vs" path="shaders\gScene1(VS).glsl" entry="main" />
+			<shader type="ps" path="shaders\gScene1(PS).glsl" entry="main" />
+			<shader used="true" type="gs" path="shaders\gScene1(GS).glsl" entry="main" />
 			<inputlayout>
 				<item value="Position" semantic="POSITION" />
 				<item value="Normal" semantic="NORMAL" />
@@ -36,15 +36,16 @@
 		</pass>
 	</pipeline>
 	<objects>
-		<object type="texture" path="..\poggers.jpeg" vflip="false" min_filter="Linear" mag_filter="Nearest" wrap_s="Repeat" wrap_t="Repeat">
-			<bind slot="0" name="Light" />
+		<object type="texture" path="..\..\Desktop\poggers.jpeg" vflip="false" min_filter="Linear" mag_filter="Nearest" wrap_s="Repeat" wrap_t="Repeat">
+			<bind slot="0" name="gScene1" />
 		</object>
 	</objects>
 	<cameras />
 	<settings>
-		<entry type="file" name="Light" shader="vs" />
-		<entry type="file" name="Light" shader="ps" />
-		<entry type="file" name="Light" shader="gs" />
+		<entry type="property" name="gScene1" item="pipe" />
+		<entry type="file" name="gScene1" shader="vs" />
+		<entry type="file" name="gScene1" shader="ps" />
+		<entry type="file" name="gScene1" shader="gs" />
 		<entry type="camera" fp="false">
 			<distance>5</distance>
 			<pitch>0</pitch>

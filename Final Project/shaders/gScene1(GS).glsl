@@ -23,20 +23,9 @@ in VS_OUT {
 } gs_in[];
 
 
-const float size = 0.1;
 
 uniform mat4 uModelMat, uViewMat, uProjMat;
 
-
-
-void createVertex(vec3 offset){
-	vec4 actualOffset = vec4(offset * size, 0.0);
-	vec4 worldPosition = gl_in[1].gl_Position + actualOffset;
-	gl_Position = uProjMat * uViewMat * uModelMat * worldPosition;
-	
-	EmitVertex();
-	
-}
 
 void createTriangle(vec3 offset)
 {
