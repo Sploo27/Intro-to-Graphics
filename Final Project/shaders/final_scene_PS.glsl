@@ -7,10 +7,11 @@ precision highp float;
 
 uniform sampler2D uTex;
 
+out vec4 rtFragColor;
+
 //VARYING
 in vec2 vTexcoord;
 
-out vec4 rtFragColor;
 
 void main()
 {
@@ -22,6 +23,6 @@ void main()
 	//vec2 uv = gl_FragCoord.xy / uResolution;
 	vec2 uv = vTexcoord;
 	
+	rtFragColor = texture(uTex, uv); 
 	
-	rtFragColor = texture(uTex, uv);
 }

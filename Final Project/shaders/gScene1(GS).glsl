@@ -20,9 +20,11 @@ layout (triangle_strip, max_vertices = 12) out;
 
 in VS_OUT {
     vec2 vTexcoord;
+    vec4 vLightColor;
 } gs_in[];
 
 out vec2 gTexcoord;
+out vec4 gLightColor;
 
 //out GS_OUT {
 //	vec2 gTexcoord;
@@ -35,18 +37,21 @@ uniform mat4 uModelMat, uViewMat, uProjMat;
 
 void createTriangle(vec3 offset)
 {
-	//gl_Position.xyz = (gs_in[2].normal * 0.5) + offset; //testing with the normal
-	gl_Position.xyz = (gl_in[2].gl_Position.xyz * 0.5) + offset;
+	gl_Position = (gl_in[2].gl_Position * 0.5) + vec4(offset, 0.0);
 	gTexcoord = gs_in[2].vTexcoord;
+	gLightColor = gs_in[2].vLightColor;
+	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
 	EmitVertex();
 	
 	for(int i = 0; i < gl_in.length(); i++)
 	{	
-		//gl_Position.xyz = (gs_in[i].normal * 0.5) + offset; //testing with the normal
 		gl_Position.xyz = (gl_in[i].gl_Position.xyz * 0.5) + offset;
 		gTexcoord = gs_in[i].vTexcoord;
+		gLightColor = gs_in[i].vLightColor;
+		//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
 		EmitVertex();
 	}
+	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
 	
 }
 
@@ -54,24 +59,28 @@ void main() {
 /*
 	gl_Position = gl_in[0].gl_Position; 
 	gTexcoord = gs_in[0].vTexcoord;
+	gLightColor = gs_in[0].vLightColor;
     EmitVertex();
     
     gl_Position = gl_in[1].gl_Position; 
     gTexcoord = gs_in[1].vTexcoord;
+    gLightColor = gs_in[1].vLightColor;
     EmitVertex();
     
     gl_Position = gl_in[2].gl_Position; 
     gTexcoord = gs_in[2].vTexcoord;
+    gLightColor = gs_in[2].vLightColor;
     EmitVertex();
-    */
+    
     
     gl_Position = gl_in[0].gl_Position; 
-    //gTexcoord = gs_in[0].vTexcoord;
+    gTexcoord = gs_in[0].vTexcoord;
+    gLightColor = gs_in[0].vLightColor;
     EmitVertex();		//I found this last one makes it viewable on both sides
     
     
     EndPrimitive(); //this prints out each triangle in the geometry
-    
+    */
     
     float temp0x = gl_in[0].gl_Position.x - (gl_in[0].gl_Position.x * 0.5);//calculations for where each new triangle should be positioned
     float temp1x = gl_in[1].gl_Position.x - (gl_in[1].gl_Position.x * 0.5);
@@ -82,10 +91,11 @@ void main() {
     float temp2y = gl_in[2].gl_Position.y - (gl_in[2].gl_Position.y * 0.5);
     
     createTriangle(vec3(temp0x, temp0y, 0));   //need to do the math to find where each line should go based on triangle verticies given by vertex shader   
-   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
+   	
    	EndPrimitive();
    	
-   	createTriangle(vec3(temp1x, temp1y, 0));   
+   	createTriangle(vec3(temp1x, temp1y, 0)); 
+   	  
    	EndPrimitive();
    	
    	createTriangle(vec3(temp2x, temp2y, 0));   

@@ -5,18 +5,24 @@
 precision highp float;
 #endif //GL_ES
 
+layout (location = 0) out vec4 rtFragColor;
+
 uniform sampler2D uTex;
 
 in vec2 gTexcoord;
 
-layout (location = 0) out vec4 rtFragColor;
+//Lighting PER-FRAGMENT
+in vec4 gLightColor;
+
 
 void main()
 {
 	vec2 uv = gTexcoord;
 	vec4 col = texture(uTex, uv);
 	
-	rtFragColor = col;	
+	
+	rtFragColor = col * gLightColor;	
+	//rtFragColor = specularFocus * specularColor;
 }
 
 

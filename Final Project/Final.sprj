@@ -74,9 +74,9 @@
 		<entry type="file" name="final_scene_" shader="vs" />
 		<entry type="file" name="final_scene_" shader="ps" />
 		<entry type="camera" fp="false">
-			<distance>7</distance>
-			<pitch>14</pitch>
-			<yaw>197</yaw>
+			<distance>5</distance>
+			<pitch>0</pitch>
+			<yaw>172</yaw>
 			<roll>360</roll>
 		</entry>
 		<entry type="clearcolor" r="0" g="0" b="0" a="0" />
