@@ -56,7 +56,7 @@ void main()
 
 
 
-/*
+/*original fragment shader from SHADERed example
 out vec4 FragColor;
 
 

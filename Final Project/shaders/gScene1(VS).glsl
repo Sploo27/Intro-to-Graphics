@@ -37,6 +37,7 @@ out VS_OUT {
     vec2 vTexcoord;
     //LIGHTING PER-FRAGMENT
 	vec4 vLightColor;
+	bool vSmooth;
 } vs_out;
 
 //LIGHTING
@@ -82,7 +83,7 @@ void main()
     vec3 reflectedLightVector = reflect(-normalize(lightVector), vec3(0.0));
     float specularCoef = max(0.0, dot(viewVector, reflectedLightVector));
     
-    int highlightExponent = 2;
+    int highlightExponent = 1;
     
     float specularFocus = power(specularCoef, highlightExponent);
     vec4 specularColor = vec4(1.0);
@@ -95,6 +96,13 @@ void main()
     vs_out.vTexcoord = aPosition.xy * 0.5 + 0.5; 
 	
 	//vs_out.vLightVector = lightVector;
+	
+	
+	//controls what the geometry shader does
+	vs_out.vSmooth = false;
+	
+	//true just passes the triangles through the GS without change
+	//false breaks up each triangle into three triangles
 }
 
 

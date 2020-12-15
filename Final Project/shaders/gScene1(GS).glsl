@@ -48,6 +48,7 @@ layout (triangle_strip, max_vertices = 12) out;
 in VS_OUT {
     vec2 vTexcoord;
     vec4 vLightColor;
+    bool vSmooth;
 } gs_in[];
 
 out vec2 gTexcoord;
@@ -81,6 +82,58 @@ void createTriangle(vec3 offset)
 }
 
 void main() {
+
+	if(gs_in[0].vSmooth == true)
+	{
+		gl_Position = gl_in[0].gl_Position; 
+		gTexcoord = gs_in[0].vTexcoord;
+		gLightColor = gs_in[0].vLightColor;
+	    EmitVertex();
+	    
+	    gl_Position = gl_in[1].gl_Position; 
+	    gTexcoord = gs_in[1].vTexcoord;
+	    gLightColor = gs_in[1].vLightColor;
+	    EmitVertex();
+	    
+	    gl_Position = gl_in[2].gl_Position; 
+	    gTexcoord = gs_in[2].vTexcoord;
+	    gLightColor = gs_in[2].vLightColor;
+	    EmitVertex();
+	    
+	    
+	    gl_Position = gl_in[0].gl_Position; 
+	    gTexcoord = gs_in[0].vTexcoord;
+	    gLightColor = gs_in[0].vLightColor;
+	    EmitVertex();		//I found this last one makes it viewable on both sides
+	    
+	    
+	    EndPrimitive(); //this prints out each triangle in the geometry
+	
+	}
+	
+	else
+	{
+		float temp0x = gl_in[0].gl_Position.x - (gl_in[0].gl_Position.x * 0.5);//calculations for where each new triangle should be positioned
+	    float temp1x = gl_in[1].gl_Position.x - (gl_in[1].gl_Position.x * 0.5);
+	    float temp2x = gl_in[2].gl_Position.x - (gl_in[2].gl_Position.x * 0.5);
+	    
+	    float temp0y = gl_in[0].gl_Position.y - (gl_in[0].gl_Position.y * 0.5);
+	    float temp1y = gl_in[1].gl_Position.y - (gl_in[1].gl_Position.y * 0.5);
+	    float temp2y = gl_in[2].gl_Position.y - (gl_in[2].gl_Position.y * 0.5);
+	    
+	    createTriangle(vec3(temp0x, temp0y, 0));   //need to do the math to find where each line should go based on triangle verticies given by vertex shader   
+	   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
+	   	EndPrimitive();
+	   	
+	   	createTriangle(vec3(temp1x, temp1y, 0)); 
+	   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
+	   	EndPrimitive();
+	   	
+	   	createTriangle(vec3(temp2x, temp2y, 0));   
+	   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
+	   	EndPrimitive();
+	
+	}
 /*
 	gl_Position = gl_in[0].gl_Position; 
 	gTexcoord = gs_in[0].vTexcoord;
@@ -105,7 +158,7 @@ void main() {
     
     
     EndPrimitive(); //this prints out each triangle in the geometry
-    */
+    
     
     float temp0x = gl_in[0].gl_Position.x - (gl_in[0].gl_Position.x * 0.5);//calculations for where each new triangle should be positioned
     float temp1x = gl_in[1].gl_Position.x - (gl_in[1].gl_Position.x * 0.5);
@@ -126,7 +179,7 @@ void main() {
    	createTriangle(vec3(temp2x, temp2y, 0));   
    	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
    	EndPrimitive();
-    
+    */
     
 }  
 

@@ -59,11 +59,11 @@
 		</pass>
 	</pipeline>
 	<objects>
-		<object type="texture" path="..\..\Desktop\poggers.jpeg" vflip="false" min_filter="Linear" mag_filter="Nearest" wrap_s="Repeat" wrap_t="Repeat">
-			<bind slot="0" name="gScene1" />
-		</object>
 		<object type="rendertexture" name="rtScene" fsize="631,773" clear="true">
 			<bind slot="0" name="final_scene_" />
+		</object>
+		<object type="texture" path="..\..\Desktop\basket.jpg" vflip="false" min_filter="Linear" mag_filter="Nearest" wrap_s="Repeat" wrap_t="Repeat">
+			<bind slot="0" name="gScene1" />
 		</object>
 	</objects>
 	<cameras />
@@ -74,9 +74,9 @@
 		<entry type="file" name="final_scene_" shader="vs" />
 		<entry type="file" name="final_scene_" shader="ps" />
 		<entry type="camera" fp="false">
-			<distance>8</distance>
-			<pitch>25</pitch>
-			<yaw>154</yaw>
+			<distance>7</distance>
+			<pitch>12</pitch>
+			<yaw>144</yaw>
 			<roll>360</roll>
 		</entry>
 		<entry type="clearcolor" r="0" g="0" b="0" a="0" />
