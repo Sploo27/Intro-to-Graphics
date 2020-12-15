@@ -45,7 +45,7 @@ void createTriangle(vec3 offset)
 	
 	for(int i = 0; i < gl_in.length(); i++)
 	{	
-		gl_Position.xyz = (gl_in[i].gl_Position.xyz * 0.5) + offset;
+		gl_Position = (gl_in[i].gl_Position * 0.5) + vec4(offset, 0.0);
 		gTexcoord = gs_in[i].vTexcoord;
 		gLightColor = gs_in[i].vLightColor;
 		//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
