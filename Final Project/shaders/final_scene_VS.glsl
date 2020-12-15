@@ -24,7 +24,8 @@ Using influence from:
 	- https://learnopengl.com/Advanced-OpenGL/Geometry-Shader
 	- https://www.lighthouse3d.com/tutorials/glsl-tutorial/geometry-shader-examples/
 
-
+- learned some kernal tequniques from:
+ 	-https://learnopengl.com/Advanced-OpenGL/Framebuffers
 */
 
 #version 450

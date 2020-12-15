@@ -24,6 +24,8 @@ Using influence from:
 	- https://learnopengl.com/Advanced-OpenGL/Geometry-Shader
 	- https://www.lighthouse3d.com/tutorials/glsl-tutorial/geometry-shader-examples/
 
+- learned some kernal tequniques from:
+ 	-https://learnopengl.com/Advanced-OpenGL/Framebuffers
 
 */
 
@@ -39,36 +41,34 @@ layout (triangles) in;
 //triangles_adjacency (6)
 
 //PRIMITIVE OUTPUT
-layout (triangle_strip, max_vertices = 12) out; 
+layout (triangle_strip, max_vertices = 12) out;  
 //output primitives:
 //points
 //line_strip
 //triangle_strip
 
-in VS_OUT {
+in VS_OUT { //input variables given from vertex shader
     vec2 vTexcoord;
     vec4 vLightColor;
     bool vSmooth;
 } gs_in[];
 
-out vec2 gTexcoord;
+out vec2 gTexcoord; //output variables given to the fragment shader
 out vec4 gLightColor;
 
-//out GS_OUT {
-//	vec2 gTexcoord;
-//} gs_out;
+//uniform mat4 uModelMat, uViewMat, uProjMat; 
+	//using these to experiment with bringing the image from 
+	//object space to clip spacein the geometry shader rather 
+	//than the vertex shader but ran into issues
 
-
-
-uniform mat4 uModelMat, uViewMat, uProjMat;
-
-
-void createTriangle(vec3 offset)
-{
+void createTriangle(vec3 offset) //function that makes a smaller triangle from the 
+								 //given triangle from the vertex shader then 
+{								 //positions it based on the given offset
 	gl_Position = (gl_in[2].gl_Position * 0.5) + vec4(offset, 0.0);
 	gTexcoord = gs_in[2].vTexcoord;
 	gLightColor = gs_in[2].vLightColor;
-	EmitVertex();
+	EmitVertex(); //for some reason, it would not work without this
+				  //a starting point essentially
 	
 	for(int i = 0; i < gl_in.length(); i++)
 	{	
@@ -83,7 +83,7 @@ void createTriangle(vec3 offset)
 
 void main() {
 
-	if(gs_in[0].vSmooth == true)
+	if(gs_in[0].vSmooth == true) //just a pass through, outputs unchanged triangle
 	{
 		gl_Position = gl_in[0].gl_Position; 
 		gTexcoord = gs_in[0].vTexcoord;
@@ -121,85 +121,24 @@ void main() {
 	    float temp1y = gl_in[1].gl_Position.y - (gl_in[1].gl_Position.y * 0.5);
 	    float temp2y = gl_in[2].gl_Position.y - (gl_in[2].gl_Position.y * 0.5);
 	    
-	    createTriangle(vec3(temp0x, temp0y, 0));   //need to do the math to find where each line should go based on triangle verticies given by vertex shader   
+	    createTriangle(vec3(temp0x, temp0y, 0));   // bottom left triangle
 	   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
 	   	EndPrimitive();
 	   	
-	   	createTriangle(vec3(temp1x, temp1y, 0)); 
+	   	createTriangle(vec3(temp1x, temp1y, 0)); //bottom right triangle
 	   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
 	   	EndPrimitive();
 	   	
-	   	createTriangle(vec3(temp2x, temp2y, 0));   
+	   	createTriangle(vec3(temp2x, temp2y, 0));   //top triangle
 	   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
 	   	EndPrimitive();
 	
 	}
-/*
-	gl_Position = gl_in[0].gl_Position; 
-	gTexcoord = gs_in[0].vTexcoord;
-	gLightColor = gs_in[0].vLightColor;
-    EmitVertex();
-    
-    gl_Position = gl_in[1].gl_Position; 
-    gTexcoord = gs_in[1].vTexcoord;
-    gLightColor = gs_in[1].vLightColor;
-    EmitVertex();
-    
-    gl_Position = gl_in[2].gl_Position; 
-    gTexcoord = gs_in[2].vTexcoord;
-    gLightColor = gs_in[2].vLightColor;
-    EmitVertex();
-    
-    
-    gl_Position = gl_in[0].gl_Position; 
-    gTexcoord = gs_in[0].vTexcoord;
-    gLightColor = gs_in[0].vLightColor;
-    EmitVertex();		//I found this last one makes it viewable on both sides
-    
-    
-    EndPrimitive(); //this prints out each triangle in the geometry
-    
-    
-    float temp0x = gl_in[0].gl_Position.x - (gl_in[0].gl_Position.x * 0.5);//calculations for where each new triangle should be positioned
-    float temp1x = gl_in[1].gl_Position.x - (gl_in[1].gl_Position.x * 0.5);
-    float temp2x = gl_in[2].gl_Position.x - (gl_in[2].gl_Position.x * 0.5);
-    
-    float temp0y = gl_in[0].gl_Position.y - (gl_in[0].gl_Position.y * 0.5);
-    float temp1y = gl_in[1].gl_Position.y - (gl_in[1].gl_Position.y * 0.5);
-    float temp2y = gl_in[2].gl_Position.y - (gl_in[2].gl_Position.y * 0.5);
-    
-    createTriangle(vec3(temp0x, temp0y, 0));   //need to do the math to find where each line should go based on triangle verticies given by vertex shader   
-   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
-   	EndPrimitive();
-   	
-   	createTriangle(vec3(temp1x, temp1y, 0)); 
-   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
-   	EndPrimitive();
-   	
-   	createTriangle(vec3(temp2x, temp2y, 0));   
-   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
-   	EndPrimitive();
-    */
     
 }  
 
 
-/*
-gl_Position = gl_in[0].gl_Position + vec4(0.0, 0.0, 0.0, 0.0);
-    EmitVertex();
 
-    gl_Position = gl_in[1].gl_Position;
-    EmitVertex();
-    
-    gl_Position = gl_in[2].gl_Position;
-    EmitVertex();
-    
-    gl_Position = gl_in[0].gl_Position; 
-    EmitVertex();		//I found this last one makes it viewable on both sides
-    
-    
-    EndPrimitive();
-   */ 
 
 
 /* original geometry shader example from SHADERed

@@ -24,6 +24,8 @@ Using influence from:
 	- https://learnopengl.com/Advanced-OpenGL/Geometry-Shader
 	- https://www.lighthouse3d.com/tutorials/glsl-tutorial/geometry-shader-examples/
 
+- learned some kernal tequniques from:
+ 	-https://learnopengl.com/Advanced-OpenGL/Framebuffers
 
 */
 
@@ -38,10 +40,10 @@ layout (location = 0) out vec4 rtFragColor;
 
 uniform sampler2D uTex;
 
-in vec2 gTexcoord;
+in vec2 gTexcoord; //texcoord of each triangle
 
 //Lighting PER-FRAGMENT
-in vec4 gLightColor;
+in vec4 gLightColor; //shading of each triangle
 
 
 void main()
@@ -50,8 +52,9 @@ void main()
 	vec4 col = texture(uTex, uv);
 	
 	
-	rtFragColor = col * gLightColor;	
-	//rtFragColor = specularFocus * specularColor;
+	rtFragColor = col * gLightColor; //combines the given texture and the lighting of each triangle 
+									 //	to mold the shaded geometry
+	
 }
 
 

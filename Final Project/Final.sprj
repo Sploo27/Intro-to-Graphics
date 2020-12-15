@@ -13,8 +13,8 @@
 			</inputlayout>
 			<rendertexture name="rtScene" />
 			<items>
-				<item name="Sphere" type="geometry">
-					<type>Sphere</type>
+				<item name="Geometry" type="geometry">
+					<type>Triangle</type>
 					<width>1</width>
 					<height>1</height>
 					<depth>1</depth>
@@ -75,8 +75,8 @@
 		<entry type="file" name="final_scene_" shader="ps" />
 		<entry type="camera" fp="false">
 			<distance>7</distance>
-			<pitch>15</pitch>
-			<yaw>142</yaw>
+			<pitch>-1</pitch>
+			<yaw>179</yaw>
 			<roll>360</roll>
 		</entry>
 		<entry type="clearcolor" r="0" g="0" b="0" a="0" />

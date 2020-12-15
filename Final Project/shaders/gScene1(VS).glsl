@@ -24,7 +24,8 @@ Using influence from:
 	- https://learnopengl.com/Advanced-OpenGL/Geometry-Shader
 	- https://www.lighthouse3d.com/tutorials/glsl-tutorial/geometry-shader-examples/
 
-
+- learned some kernal tequniques from:
+ 	-https://learnopengl.com/Advanced-OpenGL/Framebuffers
 */
 
 #version 450 //core
@@ -89,9 +90,13 @@ void main()
     vec4 specularColor = vec4(1.0);
     //vec4 tex = texture(uTexture, aPosition.xy);
 	
-	vs_out.vLightColor = specularColor * specularFocus;
+	vs_out.vLightColor = specularColor * specularFocus; 
+				//this is how each triangle is given lighting
+				//passed to geometry for each triangle then 
+				//passed on to the fragment shader
 	
 	gl_Position = uProjMat * uViewMat * uModelMat * aPosition;
+    
     //gl_Position = aPosition;  
     vs_out.vTexcoord = aPosition.xy * 0.5 + 0.5; 
 	
