@@ -1,4 +1,31 @@
+/*
+Author: Mitko Ivanov
+Class: GPR-200-01/02/03: Introduction to Modern Graphics Programming
+Assignment: Lab 7: Vertex Shaders
+Date Assigned: 11/10/2020
+Due Date: 12/15/2020
+Description: Use SHADERed to demonstrate what I have learned throughout the semester
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the
+definition and consequences of plagiarism and acknowledge that the assessor
+of this assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of
+academic staff; and/or
+- Communicate a copy of this assignment to a plagiarism checking
+service (which may then retain a copy of this assignment on its
+database for the purpose of future plagiarism checking)
 
+Using influence from:
+
+- Given code from the SHADERed example of geometry shaders
+
+- leared further about geometry shaders from: 
+	- https://learnopengl.com/Advanced-OpenGL/Geometry-Shader
+	- https://www.lighthouse3d.com/tutorials/glsl-tutorial/geometry-shader-examples/
+
+
+*/
 
 #version 450 //core
 
@@ -40,7 +67,6 @@ void createTriangle(vec3 offset)
 	gl_Position = (gl_in[2].gl_Position * 0.5) + vec4(offset, 0.0);
 	gTexcoord = gs_in[2].vTexcoord;
 	gLightColor = gs_in[2].vLightColor;
-	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
 	EmitVertex();
 	
 	for(int i = 0; i < gl_in.length(); i++)
@@ -48,10 +74,9 @@ void createTriangle(vec3 offset)
 		gl_Position = (gl_in[i].gl_Position * 0.5) + vec4(offset, 0.0);
 		gTexcoord = gs_in[i].vTexcoord;
 		gLightColor = gs_in[i].vLightColor;
-		//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
 		EmitVertex();
 	}
-	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
+	
 	
 }
 
@@ -91,15 +116,15 @@ void main() {
     float temp2y = gl_in[2].gl_Position.y - (gl_in[2].gl_Position.y * 0.5);
     
     createTriangle(vec3(temp0x, temp0y, 0));   //need to do the math to find where each line should go based on triangle verticies given by vertex shader   
-   	
+   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
    	EndPrimitive();
    	
    	createTriangle(vec3(temp1x, temp1y, 0)); 
-   	  
+   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
    	EndPrimitive();
    	
    	createTriangle(vec3(temp2x, temp2y, 0));   
-   	
+   	//gl_Position = uProjMat * uViewMat * uModelMat * gl_Position;
    	EndPrimitive();
     
     
