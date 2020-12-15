@@ -63,7 +63,7 @@ float kernel3[] = float[] ( //blur
 
 
 
-float kernel4[] = float[] ( //edge detection
+float kernel4[] = float[] ( //custom
 		 4.0,  -2.0,  4.0,
         -2.0,  -7.0, -2.0,
          4.0,  -2.0,  4.0);
@@ -91,11 +91,12 @@ void main()
        
 	vec4 tempTex[offsets.length()];
 	for(int i = 0; i < offsets.length(); i++)
-		tempTex[i] = vec4(texture(uTex, uv + offsets[i])); 
+		tempTex[i] = vec4(texture(uTex, uv + offsets[i])); //add the offsets to  
+												//current texture coordinate
 		
 	vec4 sharp, edge, blur, custom = vec4(0.0);
 	
-	for(int i = 0; i < kernel1.length(); i++)
+	for(int i = 0; i < kernel1.length(); i++) //then we multiply the texture values by the kernel
 	{
 		sharp += tempTex[i] * kernel1[i];
 		edge += tempTex[i] * kernel2[i];
