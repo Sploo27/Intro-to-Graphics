@@ -44,13 +44,25 @@ in vec2 vTexcoord;
 
 void main()
 {
-	//texturing
-	//sampler, uv
-	// 1) uv  = fragCoord / resolution
-	// 2) texture coordinate
-	
-	//vec2 uv = gl_FragCoord.xy / uResolution;
 	vec2 uv = vTexcoord;
+
+	/*float kernel[9] = 
+	{
+		-1.0, -1.0, -1.0,
+        -1.0,  9.0, -1.0,
+        -1.0, -1.0, -1.0
+	};
+       
+	vec4 sampleTex[9];
+	for(int i = 0; i < 9; i++)
+		sampleTex[i] = vec4(texture(uTex, uv));
+		
+	vec4 col = vec4(1.0);
+	for(int i = 0; i < 9; i++)
+		col += sampleTex[i] * kernal[i];*/
+
+
+	
 	
 	rtFragColor = texture(uTex, uv); 
 	
